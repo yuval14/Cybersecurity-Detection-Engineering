@@ -30,6 +30,12 @@ Each detection rule should document:
 
 ---
 
+## 📚 Detection Engineering Resources
+
+- [Confidence Scoring for Log Sources](./Log-Source-Confidence-Scoring/README.md)
+
+---
+
 ## ⚙️ Supported Platforms & Formats
 
 - **YARA / YARA-L / YARA-L 2.0**  
