@@ -18,6 +18,7 @@ Where applicable, detections include:
 
 ---
 
+
 ## 🧪 Rule Quality Standards
 
 Each detection rule should document:
@@ -30,11 +31,14 @@ Each detection rule should document:
 
 ---
 
+
 ## 📚 Detection Engineering Resources
 
 - [Confidence Scoring for Log Sources](./Log-Source-Confidence-Scoring/README.md)
+- [PEAK Threat Hunting Framework](./Threat-Hunting-Frameworks/PEAK-Threat-Hunting-Framework.md)
 
 ---
+
 
 ## ⚙️ Supported Platforms & Formats
 
@@ -49,6 +53,7 @@ Each detection rule should document:
 Sigma rules may be used as the **authoritative source**, with platform-specific rules derived from them where applicable.
 
 ---
+
 
 ## 📄 License
 
@@ -65,6 +70,7 @@ See the `LICENSE` file for the full license text.
 
 ---
 
+
 ## 🚨 Disclaimer
 
 This repository is provided **as-is** for defensive and research purposes.
@@ -74,6 +80,7 @@ This repository is provided **as-is** for defensive and research purposes.
 - No warranty is provided, express or implied  
 
 ---
+
 
 ## 🤝 Contributions
 
@@ -89,6 +96,7 @@ Please:
 
 ---
 
+
 ## 🎯 Intended Audience
 
 - SOC Analysts  
@@ -98,5 +106,6 @@ Please:
 - Security Researchers  
 
 ---
+
 
 **Open, shareable detection logic strengthens collective defense — GPL ensures it stays that way.**
