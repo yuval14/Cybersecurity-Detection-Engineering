@@ -36,6 +36,7 @@ Each detection rule should document:
 
 - [Confidence Scoring for Log Sources](./Log-Source-Confidence-Scoring/README.md)
 - [PEAK Threat Hunting Framework](./Threat-Hunting-Frameworks/PEAK-Threat-Hunting-Framework.md)
+- [Sqrrl Threat Hunting Reference Model](./Threat-Hunting-Frameworks/Sqrrl-Threat-Hunting-Reference-Model.md)
 
 ---
 
