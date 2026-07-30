@@ -1,0 +1,57 @@
+title: Repeated AI Agent Tool Execution Loop
+id: 5a1532eb-2c26-46b2-b868-f07285742866
+status: experimental
+description: Detects AI-linked processes repeatedly spawning shells, interpreters, scanners, or administrative tools. Repetition and sequence thresholds must be implemented in the SIEM.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - "\\ollama.exe"
+      - "\\lmstudio.exe"
+      - "\\aider.exe"
+      - "\\cursor.exe"
+      - "\\claude.exe"
+      - "\\python.exe"
+    ParentCommandLine|contains:
+      - "langchain"
+      - "autogen"
+      - "crewai"
+      - "openai"
+      - "anthropic"
+      - "ollama"
+  selection_child:
+    Image|endswith:
+      - "\\cmd.exe"
+      - "\\powershell.exe"
+      - "\\pwsh.exe"
+      - "\\python.exe"
+      - "\\wsl.exe"
+      - "\\ssh.exe"
+      - "\\curl.exe"
+      - "\\nmap.exe"
+      - "\\net.exe"
+      - "\\nltest.exe"
+  condition: selection_parent and selection_child
+fields:
+  - Computer
+  - User
+  - ParentImage
+  - ParentCommandLine
+  - Image
+  - CommandLine
+  - ProcessGuid
+  - ParentProcessGuid
+falsepositives:
+  - Authorized coding agents
+  - Security automation and SOAR workers
+  - Red-team and development environments
+level: high
+tags:
+  - attack.execution
+  - aidaf.internal
+  - aidaf.integration
+  - aidaf.orchestration
