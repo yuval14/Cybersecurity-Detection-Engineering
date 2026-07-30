@@ -1,0 +1,48 @@
+title: AI Client or Agent Framework Spawns Script Interpreter
+id: 8683b75a-47d0-44bf-9095-799019fa4a89
+status: experimental
+description: Detects an AI client, local model runtime, or agent framework spawning a command shell or script interpreter. This may indicate tool-use orchestration or generated code execution.
+references:
+  - https://github.com/yuval14/Cybersecurity-Detection-Engineering/tree/main/AIDAF-Adversarial-AI-Detection-and-Assessment-Framework
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.execution
+  - attack.t1059
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\\ollama.exe'
+      - '\\lmstudio.exe'
+      - '\\python.exe'
+      - '\\pythonw.exe'
+      - '\\node.exe'
+      - '\\claude.exe'
+      - '\\chatgpt.exe'
+  selection_child:
+    Image|endswith:
+      - '\\cmd.exe'
+      - '\\powershell.exe'
+      - '\\pwsh.exe'
+      - '\\wscript.exe'
+      - '\\cscript.exe'
+      - '\\bash.exe'
+      - '\\python.exe'
+  selection_agent_terms:
+    ParentCommandLine|contains:
+      - 'langchain'
+      - 'autogen'
+      - 'crewai'
+      - 'semantic-kernel'
+      - 'openai'
+      - 'anthropic'
+      - 'ollama'
+      - 'mcp'
+  condition: selection_child and (selection_parent or selection_agent_terms)
+falsepositives:
+  - Authorized AI development or agent testing
+  - Local model applications configured to execute approved tools
+level: high
