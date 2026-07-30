@@ -1,0 +1,31 @@
+title: Permissive AI Coding Agent Execution Configuration
+id: 96a11bf0-66f3-4dd0-9514-1d0cf9e83d0b
+status: experimental
+description: Detects command-line options or configuration changes that disable approval, permission or response-storage safeguards in AI coding and agent tools.
+references:
+  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.defense-evasion
+  - attack.t1562.001
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    CommandLine|contains:
+      - 'dangerously-skip-permissions'
+      - 'approvalMode=yolo'
+      - 'approvalMode: yolo'
+      - 'disable_response_storage=true'
+      - 'disable_response_storage = true'
+      - 'network_access=enabled'
+      - 'network_access = "enabled"'
+      - 'CLAUDE_CODE_ATTRIBUTION_HEADER=0'
+      - 'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1'
+  condition: selection
+falsepositives:
+  - Isolated AI security testing
+  - Approved development sandbox
+level: high
