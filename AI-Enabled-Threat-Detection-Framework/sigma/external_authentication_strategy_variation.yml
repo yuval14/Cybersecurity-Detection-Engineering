@@ -1,0 +1,46 @@
+title: Repeated External Authentication Strategy Variation
+id: 0eec6d44-bdb0-4c08-a125-f8f763474247
+status: experimental
+description: Detects repeated failed authentication attempts from an external source using multiple usernames or authentication patterns. Correlation may identify rapid strategy changes consistent with AI-assisted credential operations, but the rule does not prove AI use.
+author: Yuval Sinay
+date: 2026-07-30
+references:
+  - https://attack.mitre.org/techniques/T1110/
+logsource:
+  category: authentication
+  definition: Requires normalized authentication logs with source IP, target account, application, result, and authentication method.
+detection:
+  selection_failure:
+    outcome:
+      - failure
+      - denied
+      - invalid
+      - blocked
+  filter_internal:
+    source.ip|cidr:
+      - '10.0.0.0/8'
+      - '172.16.0.0/12'
+      - '192.168.0.0/16'
+      - '127.0.0.0/8'
+  condition: selection_failure and not filter_internal
+fields:
+  - source.ip
+  - user.name
+  - destination.ip
+  - service.name
+  - authentication.method
+  - outcome
+falsepositives:
+  - Users behind shared carrier-grade NAT
+  - Misconfigured applications
+  - Password managers with stale credentials
+  - Authorized password audits and red-team exercises
+level: medium
+tags:
+  - attack.credential_access
+  - attack.t1110
+  - aidf.external_adversary
+  - aidf.operational_tempo
+  - aidf.signal_only
+# Implement temporal correlation in the SIEM. Raise confidence when one source changes
+# usernames, protocols, or authentication methods quickly after distinct failure reasons.
