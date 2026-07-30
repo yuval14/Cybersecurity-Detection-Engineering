@@ -1,0 +1,46 @@
+title: High-Variation Phishing Messages from Shared Infrastructure
+id: 3b2d84bf-61e1-40b1-91f8-46312fd36e38
+status: experimental
+description: Detects multiple inbound messages from shared infrastructure with suspicious links or attachments and unusually varied subjects or sender identities. Content diversity must be calculated or enriched by the mail platform or SIEM.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: email
+  product: m365
+detection:
+  selection_inbound:
+    email.direction: inbound
+  selection_suspicious:
+    email.attachments.file.extension:
+      - html
+      - htm
+      - zip
+      - iso
+      - img
+      - lnk
+      - js
+    url.original|contains:
+      - "login"
+      - "verify"
+      - "secure"
+      - "sharepoint"
+      - "onedrive"
+      - "document"
+  condition: selection_inbound and selection_suspicious
+fields:
+  - source.ip
+  - email.from.address
+  - email.subject
+  - email.to.address
+  - url.original
+  - email.attachments.file.name
+falsepositives:
+  - Legitimate bulk mail and marketing platforms
+  - Security awareness simulations
+  - Shared cloud email infrastructure
+level: medium
+tags:
+  - attack.initial-access
+  - attack.t1566
+  - aidaf.external
+  - aidaf.output
