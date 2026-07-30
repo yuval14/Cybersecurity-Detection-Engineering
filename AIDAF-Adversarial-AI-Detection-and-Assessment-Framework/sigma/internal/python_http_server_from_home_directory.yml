@@ -1,0 +1,32 @@
+title: Python HTTP Server Started from User Home Directory
+id: e738be1d-0139-44b4-9d23-7b2850787431
+status: experimental
+description: Detects a Python simple HTTP server launched from a user home directory, which can expose agent workspaces, exploit tooling, API keys and target lists. Based on the Unit 42 autonomous AI campaign exposure.
+references:
+  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.exfiltration
+  - attack.t1048
+  - attack.command-and-control
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    Image|endswith:
+      - '/python'
+      - '/python3'
+    CommandLine|contains|all:
+      - '-m'
+      - 'http.server'
+  home_path:
+    CurrentDirectory|startswith:
+      - '/home/'
+      - '/root/'
+  condition: selection and home_path
+falsepositives:
+  - Developer file sharing
+  - Training labs
+level: high

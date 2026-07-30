@@ -1,0 +1,36 @@
+title: Public Exploit PoC Clone Followed by Execution
+id: c7163d13-a7c4-4c4c-a454-73593aaae830
+status: experimental
+description: Detects cloning or downloading a CVE proof-of-concept followed by execution-oriented arguments. Inspired by the Unit 42 autonomous scan-download-exploit workflow.
+references:
+  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.resource-development
+  - attack.t1588.006
+  - attack.execution
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_tool:
+    Image|endswith:
+      - '/git'
+      - '/curl'
+      - '/wget'
+  selection_source:
+    CommandLine|contains:
+      - 'github.com'
+      - 'raw.githubusercontent.com'
+  selection_poc:
+    CommandLine|contains:
+      - 'CVE-20'
+      - '/exploit'
+      - '/poc'
+      - '_poc'
+  condition: selection_tool and selection_source and selection_poc
+falsepositives:
+  - Authorized security research
+  - Vulnerability validation by defenders
+level: medium
