@@ -1,0 +1,60 @@
+title: Rapid External Web Probe Variation From Single Source
+id: 8b6c8129-1c2e-4af2-a53a-b4dbe0b3e4f7
+status: experimental
+description: Detects a high rate of varied web probing patterns from a single external source. This may support investigation of adaptive or AI-assisted reconnaissance, but is not proof of AI use.
+author: Yuval Sinay
+ date: 2026-07-30
+references:
+  - https://attack.mitre.org/techniques/T1595/
+logsource:
+  category: webserver
+  definition: Requires reverse proxy, WAF, or web access logs with source IP, URI, method, status, and user-agent fields.
+detection:
+  selection_probe:
+    cs-method:
+      - GET
+      - POST
+      - OPTIONS
+    cs-uri-stem|contains:
+      - '/admin'
+      - '/api/'
+      - '/debug'
+      - '/actuator'
+      - '/.env'
+      - '/swagger'
+      - '/graphql'
+      - '/wp-'
+      - '../'
+      - '%2e%2e'
+      - '${jndi:'
+      - '<script'
+      - 'cmd='
+      - 'exec='
+  filter_internal:
+    c-ip|cidr:
+      - '10.0.0.0/8'
+      - '172.16.0.0/12'
+      - '192.168.0.0/16'
+      - '127.0.0.0/8'
+  condition: selection_probe and not filter_internal
+fields:
+  - c-ip
+  - cs-method
+  - cs-uri-stem
+  - sc-status
+  - cs-user-agent
+  - cs-host
+falsepositives:
+  - Authorized vulnerability scanners
+  - Penetration tests and red-team exercises
+  - Internet research scanners
+  - Security monitoring services
+level: medium
+tags:
+  - attack.reconnaissance
+  - attack.t1595
+  - aidf.external_adversary
+  - aidf.dynamic_behavior
+  - aidf.signal_only
+# Correlate in the SIEM by source IP over a short window and require high URI diversity,
+# changing payload families, or rapid adaptation after different HTTP responses.
