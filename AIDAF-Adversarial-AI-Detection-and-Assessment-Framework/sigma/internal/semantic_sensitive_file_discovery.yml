@@ -1,0 +1,39 @@
+title: Semantic Sensitive File Discovery by Script or Agent
+id: e8c6c026-6cd0-47b5-b3c9-9def3e959105
+status: experimental
+description: Detects scripted searches for business-sensitive concepts rather than only file extensions. Such target-aware discovery may be generated or prioritized by an AI-enabled operator.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  interpreter:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\python.exe'
+      - '\cmd.exe'
+  concepts:
+    CommandLine|contains:
+      - 'contract'
+      - 'salary'
+      - 'payroll'
+      - 'patent'
+      - 'credential'
+      - 'vpn'
+      - 'private key'
+      - 'source code'
+      - 'merger'
+      - 'acquisition'
+  condition: interpreter and concepts
+falsepositives:
+  - Authorized eDiscovery
+  - Data-loss-prevention testing
+  - Administrative inventory scripts
+level: medium
+tags:
+  - attack.collection
+  - attack.t1083
+  - aidaf.internal
+  - aidaf.e2
