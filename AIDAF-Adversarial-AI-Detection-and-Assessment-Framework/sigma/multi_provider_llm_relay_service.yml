@@ -1,0 +1,39 @@
+title: Multi-Provider LLM Relay or Account Pooling Service
+id: 39ddf8c3-11a8-4dc8-b2b4-83f6bb93c102
+status: experimental
+description: Detects execution of model relay, proxy, or account-pooling services that expose OpenAI-compatible interfaces across multiple providers. Based on GTIG reporting on Claude-Relay-Service and CLI-Proxy-API abuse.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/ai-vulnerability-exploitation-initial-access/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.resource-development
+  - attack.t1588.002
+  - attack.command-and-control
+  - attack.t1090
+  - aidaf.case.gtig-2026
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  process:
+    Image|endswith:
+      - '/python'
+      - '/python3'
+      - '/node'
+      - '/docker'
+      - '/docker-compose'
+  relay_terms:
+    CommandLine|contains:
+      - 'claude-relay-service'
+      - 'cli-proxy-api'
+      - 'litellm --proxy'
+      - 'openai-compatible'
+      - 'api_key_pool'
+      - 'account_pool'
+      - 'model_relay'
+  condition: process and relay_terms
+falsepositives:
+  - Approved enterprise AI gateway
+  - Development or interoperability testing
+level: medium
