@@ -1,0 +1,35 @@
+title: Cyberspace Search Followed by Python Exploit Scanner
+id: 81e14a37-244c-4f1e-8f5f-18e771941212
+status: experimental
+description: Detects FOFA or cyberspace-search tooling followed by execution of a threaded Python scanner or PoC, reflecting an autonomous enumeration-to-scan workflow.
+references:
+  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.reconnaissance
+  - attack.t1595
+  - attack.execution
+  - attack.t1059.006
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection:
+    Image|endswith:
+      - '/python'
+      - '/python3'
+    CommandLine|contains|all:
+      - '--scan'
+      - '--threads'
+  context:
+    CommandLine|contains:
+      - 'fofa'
+      - 'targets.txt'
+      - 'poc.py'
+      - 'scanner.py'
+  condition: selection and context
+falsepositives:
+  - Authorized penetration testing
+  - Vulnerability-management scanning
+level: high
