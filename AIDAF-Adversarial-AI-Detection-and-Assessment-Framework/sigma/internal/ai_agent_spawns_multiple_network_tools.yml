@@ -1,0 +1,44 @@
+title: AI Agent or Model Client Spawns Multiple Network Tools
+id: 13be2d50-3555-4dad-91a9-27944c089107
+status: experimental
+description: Detects AI clients, agent frameworks, or local model runtimes launching network reconnaissance or remote administration tools. This is stronger when correlated with model-service connections or tool-call traces.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  parent:
+    ParentImage|endswith:
+      - '\ollama.exe'
+      - '\lmstudio.exe'
+      - '\python.exe'
+      - '\node.exe'
+  child:
+    Image|endswith:
+      - '\nmap.exe'
+      - '\net.exe'
+      - '\nltest.exe'
+      - '\whoami.exe'
+      - '\nslookup.exe'
+      - '\ssh.exe'
+      - '\mstsc.exe'
+      - '\curl.exe'
+  framework:
+    ParentCommandLine|contains:
+      - 'langchain'
+      - 'autogen'
+      - 'crewai'
+      - 'semantic-kernel'
+      - 'mcp'
+  condition: parent and child and framework
+falsepositives:
+  - Authorized AI security research
+  - Development environments
+  - Administrative automation
+level: high
+tags:
+  - attack.discovery
+  - attack.command_and_control
+  - aidaf.internal
+  - aidaf.e3

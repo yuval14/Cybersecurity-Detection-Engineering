@@ -1,0 +1,36 @@
+title: AI Agent Trace Prompt or Tool Artifact Created on Endpoint
+id: 2f0d7500-9ffc-49ae-9d39-c90fd4579109
+status: experimental
+description: Detects creation of files commonly used to preserve prompts, plans, tool calls, agent state, or model traces in unusual endpoint locations. Correlate with suspicious process and network activity.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: file_event
+  product: windows
+detection:
+  names:
+    TargetFilename|contains:
+      - '\prompts.json'
+      - '\tool_calls.json'
+      - '\agent_state.json'
+      - '\conversation.jsonl'
+      - '\trace.jsonl'
+      - '\memory.db'
+      - '\plan.md'
+  suspicious_paths:
+    TargetFilename|contains:
+      - '\Temp\'
+      - '\ProgramData\'
+      - '\Users\Public\'
+      - '\AppData\Roaming\'
+  condition: names and suspicious_paths
+falsepositives:
+  - Approved AI development
+  - Security research
+  - Enterprise AI assistants
+level: medium
+tags:
+  - attack.collection
+  - attack.t1005
+  - aidaf.internal
+  - aidaf.e3

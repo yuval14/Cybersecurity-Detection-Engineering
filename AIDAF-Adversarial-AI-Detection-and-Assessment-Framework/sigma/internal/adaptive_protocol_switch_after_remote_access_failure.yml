@@ -1,0 +1,30 @@
+title: Adaptive Remote Access Protocol Switching After Failure
+id: 29bb0e8e-a0c4-4acc-b12b-4d0bc04b9104
+status: experimental
+description: Detects use of multiple remote administration protocols by the same account or host after failures, potentially indicating automated or AI-assisted lateral-movement decision logic.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: network_connection
+  definition: Requires source host, destination host, user, destination port, result, and timestamp.
+detection:
+  protocols:
+    DestinationPort:
+      - 22
+      - 135
+      - 139
+      - 445
+      - 3389
+      - 5985
+      - 5986
+  condition: protocols
+falsepositives:
+  - Administrative troubleshooting
+  - Management servers
+  - Vulnerability scanners
+level: medium
+tags:
+  - attack.lateral_movement
+  - attack.t1021
+  - aidaf.internal
+  - aidaf.e2

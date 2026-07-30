@@ -1,0 +1,32 @@
+title: Adaptive Directory Discovery Following HTTP Denials
+id: 9f7ee8bb-bf47-4af3-a3e2-6da8cf969101
+status: experimental
+description: Detects rapid changes in requested paths after repeated HTTP 403 or 404 responses from the same source. This may indicate an adaptive reconnaissance workflow, including AI-assisted probing, but is not proof of AI use.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: webserver
+  definition: Requires URI path, source IP, status code, user agent, and timestamp fields.
+detection:
+  denial:
+    status:
+      - 403
+      - 404
+  suspicious_agents:
+    cs-user-agent|contains:
+      - 'python-requests'
+      - 'aiohttp'
+      - 'httpx'
+      - 'Go-http-client'
+      - 'curl/'
+  condition: denial and suspicious_agents
+falsepositives:
+  - Authorized vulnerability scanners
+  - Web application testing
+  - Search engine or inventory crawlers
+level: medium
+tags:
+  - attack.reconnaissance
+  - attack.t1595
+  - aidaf.external
+  - aidaf.e1

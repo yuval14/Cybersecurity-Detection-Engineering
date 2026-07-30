@@ -1,0 +1,36 @@
+title: Local AI Model Download Following Suspicious Execution
+id: 0d76c8de-a34f-4b9a-85e6-2b9c957b9108
+status: experimental
+description: Detects model or model-runtime downloads by scripting processes after suspicious execution. An intruder may deploy a local model to avoid provider telemetry or network controls.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  process:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\curl.exe'
+      - '\wget.exe'
+      - '\python.exe'
+  model_indicators:
+    CommandLine|contains:
+      - 'ollama pull'
+      - 'huggingface.co'
+      - '.gguf'
+      - '.safetensors'
+      - 'llama.cpp'
+      - 'modelscope'
+  condition: process and model_indicators
+falsepositives:
+  - Approved data-science activity
+  - Developer model downloads
+  - AI platform deployment
+level: high
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - aidaf.internal
+  - aidaf.e3
