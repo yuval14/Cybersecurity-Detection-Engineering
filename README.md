@@ -14,7 +14,7 @@ Cyber Detection Rules
 Where applicable, detections include:
 - MITRE ATT&CK mappings  
 - Tuning guidance  
-- Known evasion considerations  
+- Known evasion considerations
 - Data-source and schema assumptions
 - Test evidence and lifecycle records
 
@@ -40,9 +40,12 @@ Each detection rule should document:
 ## 📚 Detection Engineering Resources
 
 - [Confidence Scoring for Log Sources](./Log-Source-Confidence-Scoring/README.md)
+- [AI-Enabled Threat Detection Framework](./AI-Enabled-Threat-Detection-Framework/README.md)
 - [Agentic Threat Hunting and Detection Engineering Frameworks - ATHF and ADEF](./Threat-Hunting-Frameworks/Agentic-Threat-Hunting-and-Detection-Engineering-Frameworks.md)
 - [PEAK Threat Hunting Framework](./Threat-Hunting-Frameworks/PEAK-Threat-Hunting-Framework.md)
 - [Sqrrl Threat Hunting Reference Model](./Threat-Hunting-Frameworks/Sqrrl-Threat-Hunting-Reference-Model.md)
+
+The AI-Enabled Threat Detection Framework provides an organizational method for assessing whether an adversary used AI during an intrusion. It includes evidence levels, scoring, investigation workflows, maturity guidance, correlation use cases, and experimental Sigma rules.
 
 The ATHF and ADEF page presents a complementary workflow from a structured threat hunt to a governed production detection. ATHF uses the LOCK lifecycle for threat hunting, while ADEF uses the FORGE lifecycle to preserve detection reasoning, validation, governance, tuning, and review history.
 
