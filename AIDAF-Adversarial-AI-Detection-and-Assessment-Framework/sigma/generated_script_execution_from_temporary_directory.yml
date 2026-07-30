@@ -1,0 +1,43 @@
+title: Newly Generated Script Executed from Temporary Directory
+id: 5246c2a8-9c74-4c15-9364-f9d8dc359639
+status: experimental
+description: Detects script interpreters executing files from temporary or user-writable paths with command-line patterns associated with recently generated scripts. Use with file-creation and AI-service telemetry for stronger correlation.
+references:
+  - https://github.com/yuval14/Cybersecurity-Detection-Engineering/tree/main/AIDAF-Adversarial-AI-Detection-and-Assessment-Framework
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.execution
+  - attack.t1059
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_interpreter:
+    Image|endswith:
+      - '\\powershell.exe'
+      - '\\pwsh.exe'
+      - '\\python.exe'
+      - '\\pythonw.exe'
+      - '\\wscript.exe'
+      - '\\cscript.exe'
+      - '\\node.exe'
+  selection_path:
+    CommandLine|contains:
+      - '\\AppData\\Local\\Temp\\'
+      - '\\Windows\\Temp\\'
+      - '\\Users\\Public\\'
+      - '\\Downloads\\'
+  selection_script:
+    CommandLine|contains:
+      - '.ps1'
+      - '.py'
+      - '.js'
+      - '.vbs'
+      - '.cmd'
+      - '.bat'
+  condition: all of selection_*
+falsepositives:
+  - Software installers and enterprise management tools
+  - Authorized development, notebook, or automation workflows
+level: medium
