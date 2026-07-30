@@ -1,0 +1,54 @@
+title: Local AI Model Runtime Launched by Suspicious Parent
+id: 0d4e7f8a-9d2c-48bd-9f47-fb2e8fcaed0c
+status: experimental
+description: Detects local AI model runtimes launched by script interpreters, Office applications, browsers, or other unusual parent processes. This can indicate local inference used during an intrusion, but legitimate developer activity is common.
+author: Yuval Sinay
+date: 2026-07-30
+references:
+  - https://github.com/yuval14/Cybersecurity-Detection-Rules/tree/main/AI-Enabled-Threat-Detection-Framework
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_runtime:
+    Image|endswith:
+      - '\ollama.exe'
+      - '\llama-server.exe'
+      - '\llama-cli.exe'
+      - '\koboldcpp.exe'
+      - '\text-generation-launcher.exe'
+      - '\vllm.exe'
+  selection_parent:
+    ParentImage|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\mshta.exe'
+      - '\winword.exe'
+      - '\excel.exe'
+      - '\outlook.exe'
+      - '\chrome.exe'
+      - '\msedge.exe'
+      - '\firefox.exe'
+  filter_approved:
+    CommandLine|contains:
+      - '\approved-ai\'
+      - '--approved-service'
+  condition: selection_runtime and selection_parent and not filter_approved
+falsepositives:
+  - Legitimate local model development or testing.
+  - Approved desktop AI applications launched through wrapper scripts.
+level: high
+tags:
+  - attack.execution
+  - attack.t1059
+  - detection.ai-enabled-threat
+fields:
+  - Image
+  - ParentImage
+  - CommandLine
+  - ParentCommandLine
+  - User
+  - CurrentDirectory
