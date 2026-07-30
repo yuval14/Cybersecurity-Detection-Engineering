@@ -1,0 +1,42 @@
+title: AI Client Execution Following Host or Domain Discovery
+id: 2bd4484e-1f39-4b6f-9dd7-0d1a89af7840
+status: experimental
+description: Detects execution of an AI client, agent framework, or local model runtime on a host where discovery commands were recently executed. SIEM correlation by host and user within a short time window is required.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_ai:
+    Image|endswith:
+      - "\\ollama.exe"
+      - "\\lmstudio.exe"
+      - "\\aider.exe"
+      - "\\cursor.exe"
+      - "\\claude.exe"
+      - "\\python.exe"
+    CommandLine|contains:
+      - "langchain"
+      - "autogen"
+      - "crewai"
+      - "openai"
+      - "anthropic"
+      - "ollama"
+  condition: selection_ai
+fields:
+  - Computer
+  - User
+  - Image
+  - ParentImage
+  - CommandLine
+  - ProcessGuid
+falsepositives:
+  - Authorized AI development
+  - Data-science workloads
+  - Enterprise AI assistants
+level: medium
+tags:
+  - attack.discovery
+  - aidaf.internal
+  - aidaf.integration

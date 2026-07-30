@@ -1,0 +1,47 @@
+title: Suspicious Victim Data Transfer to External AI Service
+id: 6f6b50aa-74d8-45cb-a6fd-52378c71f944
+status: experimental
+description: Detects scripting or archive utilities connecting to known AI service endpoints after accessing potentially sensitive files. File access and network events must be correlated by host and process in the SIEM.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection_process:
+    Image|endswith:
+      - "\\powershell.exe"
+      - "\\pwsh.exe"
+      - "\\python.exe"
+      - "\\curl.exe"
+      - "\\wget.exe"
+      - "\\7z.exe"
+      - "\\tar.exe"
+  selection_destination:
+    DestinationHostname|endswith:
+      - ".openai.com"
+      - ".anthropic.com"
+      - ".googleapis.com"
+      - ".cohere.com"
+      - ".mistral.ai"
+      - ".groq.com"
+  condition: selection_process and selection_destination
+fields:
+  - Computer
+  - User
+  - Image
+  - ProcessGuid
+  - DestinationHostname
+  - DestinationIp
+  - DestinationPort
+falsepositives:
+  - Authorized AI applications
+  - Developer testing
+  - Approved data-analysis workflows
+level: high
+tags:
+  - attack.collection
+  - attack.exfiltration
+  - attack.t1041
+  - aidaf.internal
+  - aidaf.integration

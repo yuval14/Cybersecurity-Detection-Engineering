@@ -1,0 +1,44 @@
+title: Suspicious Access to AI Service API Key Material
+id: 06e26f6b-423f-44f5-92de-8a38fd69f1be
+status: experimental
+description: Detects command-line activity searching for or reading common AI service API key names or credential locations from an unexpected process context.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_tools:
+    Image|endswith:
+      - "\\cmd.exe"
+      - "\\powershell.exe"
+      - "\\pwsh.exe"
+      - "\\python.exe"
+      - "\\wscript.exe"
+      - "\\cscript.exe"
+  selection_key_terms:
+    CommandLine|contains:
+      - "OPENAI_API_KEY"
+      - "ANTHROPIC_API_KEY"
+      - "GEMINI_API_KEY"
+      - "AZURE_OPENAI_API_KEY"
+      - "COHERE_API_KEY"
+      - ".env"
+      - "credentials.json"
+  condition: selection_tools and selection_key_terms
+fields:
+  - Computer
+  - User
+  - Image
+  - ParentImage
+  - CommandLine
+falsepositives:
+  - Authorized developers and deployment pipelines
+  - Secret-scanning tools
+  - IT troubleshooting
+level: high
+tags:
+  - attack.credential-access
+  - attack.t1552.001
+  - aidaf.internal
+  - aidaf.access

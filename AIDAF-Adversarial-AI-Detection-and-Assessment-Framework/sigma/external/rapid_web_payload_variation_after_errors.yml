@@ -1,0 +1,54 @@
+title: Rapid Web Payload Variation Following Application Errors
+id: 6b05e3df-d06d-45ae-85ac-e1e5525db2c0
+status: experimental
+description: Detects repeated requests from the same source or session that rapidly vary suspicious payload syntax after HTTP error responses. This is an investigation signal for adaptive external attack behavior and does not prove AI use.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: webserver
+detection:
+  selection_request:
+    cs-method:
+      - GET
+      - POST
+    cs-uri-query|contains:
+      - "../"
+      - "%2e%2e"
+      - "<script"
+      - "%3cscript"
+      - "union select"
+      - "sleep("
+      - "${jndi:"
+      - "{{"
+      - "cmd="
+      - "exec="
+  selection_error:
+    sc-status:
+      - 400
+      - 401
+      - 403
+      - 404
+      - 405
+      - 406
+      - 415
+      - 422
+      - 429
+      - 500
+  condition: selection_request and selection_error
+fields:
+  - src_ip
+  - cs-method
+  - cs-uri-stem
+  - cs-uri-query
+  - sc-status
+  - cs-user-agent
+falsepositives:
+  - Authorized vulnerability scanners
+  - Penetration tests and red-team exercises
+  - Internet-wide research scanners
+level: medium
+tags:
+  - attack.initial-access
+  - attack.t1190
+  - aidaf.external
+  - aidaf.dynamic-behavior
