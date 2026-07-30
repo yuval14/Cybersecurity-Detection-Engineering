@@ -1,0 +1,39 @@
+title: VBScript Copies Itself to Removable Drives and Mapped Network Shares
+id: 6b404e78-e49c-40a3-9009-161cb94c2607
+status: experimental
+description: Detects Windows Script Host activity copying a VBS payload to removable drives or mapped network shares, as designed in PROMPTFLUX variants.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/threat-actor-usage-of-ai-tools
+  - https://attack.mitre.org/techniques/T1091/
+  - https://attack.mitre.org/techniques/T1021/002/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.lateral_movement
+  - attack.t1091
+  - attack.t1021.002
+  - aidaf.internal
+  - aidaf.case.promptflux
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_process:
+    Image|endswith:
+      - '\wscript.exe'
+      - '\cscript.exe'
+  selection_extension:
+    TargetFilename|endswith: '.vbs'
+  selection_destination:
+    TargetFilename|startswith:
+      - 'E:\'
+      - 'F:\'
+      - 'G:\'
+      - 'H:\'
+      - '\\'
+  condition: selection_process and selection_extension and selection_destination
+falsepositives:
+  - Authorized legacy scripts deployed to removable media or network shares
+level: high
+notes:
+  - Correlate with Gemini API access, Startup-folder persistence, or creation of PROMPTFLUX response logs.

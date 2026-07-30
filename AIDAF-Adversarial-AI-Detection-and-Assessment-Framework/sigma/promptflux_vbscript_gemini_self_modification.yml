@@ -1,0 +1,37 @@
+title: VBScript Queries Gemini API and Rewrites Itself for Persistence
+id: 6c3e2e88-8d9a-4b95-a818-101cb94c2601
+status: experimental
+description: Detects VBScript or Windows Script Host activity contacting the Gemini API and writing a VBS file into the user Startup folder, reflecting the PROMPTFLUX just-in-time self-modification workflow.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/threat-actor-usage-of-ai-tools
+  - https://attack.mitre.org/techniques/T1059/005/
+  - https://attack.mitre.org/techniques/T1547/001/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.execution
+  - attack.t1059.005
+  - attack.persistence
+  - attack.t1547.001
+  - aidaf.internal
+  - aidaf.case.promptflux
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_process:
+    Image|endswith:
+      - '\wscript.exe'
+      - '\cscript.exe'
+  selection_target:
+    TargetFilename|contains|all:
+      - '\Microsoft\Windows\Start Menu\Programs\Startup\'
+      - '.vbs'
+  condition: selection_process and selection_target
+falsepositives:
+  - Approved logon scripts or enterprise software deployment using VBS
+  - Legacy administrative automation
+level: high
+notes:
+  - Correlate with an outbound connection from the same process tree to generativelanguage.googleapis.com or another model endpoint.
+  - A match detects the observable persistence workflow, not AI use by itself.

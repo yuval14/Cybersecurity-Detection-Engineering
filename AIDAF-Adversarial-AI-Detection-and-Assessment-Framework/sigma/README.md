@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This directory is the single flat library for all AIDAF Sigma YAML rules. Rules are not separated into `external`, `internal`, or `case-studies` subdirectories. Operational context is preserved through file names, descriptions, references, and tags such as `aidaf.external`, `aidaf.internal`, and `aidaf.case.unit42`.
+This directory is the single flat library for all AIDAF Sigma YAML rules. Rules are not separated into `external`, `internal`, or `case-studies` subdirectories. Operational context is preserved through file names, descriptions, references, and tags such as `aidaf.external`, `aidaf.internal`, and case-specific tags.
 
 Every rule is an experimental investigation signal. No individual match independently proves that an attacker used AI.
 
@@ -47,6 +47,19 @@ These rules can support E2-E4 assessments when correlated with model endpoints, 
 
 These detections are derived from observable tradecraft reported by Unit 42: Hermes Agent with DeepSeek, FOFA enumeration, GitHub PoC acquisition, threaded Python scanning, model-proxy access, permissive agent settings, Telegram orchestration, and a Python HTTP server started from the operator home directory.
 
+### GTIG Runtime AI Malware-Derived Rules
+
+- `promptflux_vbscript_gemini_self_modification.yml`
+- `promptflux_thinking_robot_log_creation.yml`
+- `promptflux_vbscript_spread_to_removable_and_network_drives.yml`
+- `promptsteal_huggingface_api_command_execution.yml`
+- `promptsteal_programdata_info_collection.yml`
+- `quietvault_ai_cli_secret_search_github_exfiltration.yml`
+- `promptlock_llm_generated_lua_execution.yml`
+- `gtig_runtime_ai_malware_correlation.yml`
+
+These rules are derived from Google Threat Intelligence Group reporting on PROMPTFLUX, PROMPTSTEAL/LAMEHUG, QUIETVAULT, and PROMPTLOCK. They focus on direct runtime model integration, generated-command execution, AI-assisted secret search, dynamic script creation, persistence, collection, propagation, and exfiltration.
+
 ### Baseline AI Integration Rules
 
 - `ai_client_spawns_script_interpreter.yml`
@@ -59,7 +72,7 @@ These detections are derived from observable tradecraft reported by Unit 42: Her
 - `DETECTION-TRACKS.md` — interpretation of external versus intrusion/post-compromise activity.
 - `CORRELATION.md` — baseline cross-source correlation guidance.
 - `AI-ATTACK-CORRELATION-CATALOG.md` — expanded attack-stage correlation patterns.
-- `case-studies/UNIT42-AUTONOMOUS-AI-CAMPAIGN.md` — source case analysis; Markdown only, not a rule directory.
+- `case-studies/UNIT42-AUTONOMOUS-AI-CAMPAIGN.md` — supporting case analysis.
 
 ## Required Telemetry
 

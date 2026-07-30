@@ -1,0 +1,40 @@
+title: Python Data Miner Queries Hugging Face API Before Command Execution
+id: 4f4a9e26-2c42-4ca7-a48b-121cb94c2603
+status: experimental
+description: Detects a Python or PyInstaller process connecting to the Hugging Face inference API and subsequently spawning a Windows shell, reflecting the PROMPTSTEAL model-generated command execution workflow.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/threat-actor-usage-of-ai-tools
+  - https://attack.mitre.org/techniques/T1059/003/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.execution
+  - attack.t1059.003
+  - attack.collection
+  - attack.t1005
+  - aidaf.internal
+  - aidaf.case.promptsteal
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\python.exe'
+      - '\pythonw.exe'
+    ParentCommandLine|contains:
+      - 'huggingface'
+      - 'Qwen2.5-Coder'
+      - 'api-inference.huggingface.co'
+  selection_child:
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+  condition: selection_parent and selection_child
+falsepositives:
+  - Approved AI development or automation that executes generated commands
+  - Security research laboratories
+level: critical
+notes:
+  - Correlate with network telemetry to Hugging Face and subsequent collection or exfiltration events.
