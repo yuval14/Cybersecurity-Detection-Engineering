@@ -1,5 +1,16 @@
-# Cybersecurity-Detection-Rules
-Cyber Detection Rules
+# Cybersecurity Detection Engineering
+
+A practical repository for building, validating, governing, and maintaining cybersecurity detections across their full lifecycle.
+
+The repository extends beyond individual detection rules and includes:
+
+- Detection Engineering Frameworks
+- Sigma Rules
+- Correlation Logic
+- Detection Lifecycle Methods
+- Threat Hunting Methodologies
+- AI-Enabled Detection Frameworks
+- Detection Governance and Validation
 
 ---
 
@@ -40,9 +51,15 @@ Each detection rule should document:
 ## 📚 Detection Engineering Resources
 
 - [Confidence Scoring for Log Sources](./Log-Source-Confidence-Scoring/README.md)
+- [AIDAF – Adversarial AI Detection and Assessment Framework](./AIDAF-Adversarial-AI-Detection-and-Assessment-Framework/README.md)
+- [AI-Enabled Threat Detection Framework](./AI-Enabled-Threat-Detection-Framework/README.md)
 - [Agentic Threat Hunting and Detection Engineering Frameworks - ATHF and ADEF](./Threat-Hunting-Frameworks/Agentic-Threat-Hunting-and-Detection-Engineering-Frameworks.md)
 - [PEAK Threat Hunting Framework](./Threat-Hunting-Frameworks/PEAK-Threat-Hunting-Framework.md)
 - [Sqrrl Threat Hunting Reference Model](./Threat-Hunting-Frameworks/Sqrrl-Threat-Hunting-Reference-Model.md)
+
+AIDAF provides a dedicated assessment layer for determining whether and how an adversary may have used AI during a cyber operation. It evaluates AI operational roles, attack-stage involvement, observable evidence, operational contribution, confidence, and alternative explanations.
+
+The AI-Enabled Threat Detection Framework provides an organizational method for detecting and investigating AI-assisted activity, including supporting Sigma rules and correlation use cases.
 
 The ATHF and ADEF page presents a complementary workflow from a structured threat hunt to a governed production detection. ATHF uses the LOCK lifecycle for threat hunting, while ADEF uses the FORGE lifecycle to preserve detection reasoning, validation, governance, tuning, and review history.
 
@@ -75,6 +92,21 @@ Required safeguards include:
 - Network telemetry (DNS, proxy, NetFlow)
 
 Sigma rules may be used as the **authoritative source**, with platform-specific rules derived from them where applicable.
+
+---
+
+## 🔗 Repository Location
+
+Canonical repository:
+
+`https://github.com/yuval14/Cybersecurity-Detection-Engineering`
+
+For existing local clones, update the remote with:
+
+```bash
+git remote set-url origin https://github.com/yuval14/Cybersecurity-Detection-Engineering.git
+git remote -v
+```
 
 ---
 
