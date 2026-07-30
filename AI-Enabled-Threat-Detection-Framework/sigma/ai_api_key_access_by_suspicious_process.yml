@@ -1,0 +1,66 @@
+title: Suspicious Access to AI API Key Environment Variables
+id: 18ba5b25-a267-44ea-932a-55eaab5774cf
+status: experimental
+description: Detects suspicious command-line attempts to read common AI service API-key environment variables or configuration values. This rule does not detect direct process-environment inspection without command-line artifacts.
+author: Yuval Sinay
+date: 2026-07-30
+references:
+  - https://github.com/yuval14/Cybersecurity-Detection-Rules/tree/main/AI-Enabled-Threat-Detection-Framework
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_shell:
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\python.exe'
+      - '\python3.exe'
+  selection_key_terms:
+    CommandLine|contains:
+      - 'OPENAI_API_KEY'
+      - 'ANTHROPIC_API_KEY'
+      - 'GOOGLE_API_KEY'
+      - 'GEMINI_API_KEY'
+      - 'AZURE_OPENAI_API_KEY'
+      - 'AZURE_OPENAI_ENDPOINT'
+      - 'HUGGINGFACE_TOKEN'
+      - 'HF_TOKEN'
+      - 'COHERE_API_KEY'
+      - 'MISTRAL_API_KEY'
+      - 'GROQ_API_KEY'
+      - 'OLLAMA_HOST'
+  selection_access_terms:
+    CommandLine|contains:
+      - 'echo %'
+      - '$env:'
+      - 'Get-ChildItem Env:'
+      - 'Get-Item Env:'
+      - 'set '
+      - 'printenv'
+      - 'os.environ'
+      - 'getenv('
+  filter_admin:
+    CommandLine|contains:
+      - '\approved-ai\'
+      - 'approved-ai-inventory'
+  condition: all of selection_* and not filter_admin
+falsepositives:
+  - Approved AI application troubleshooting or deployment scripts.
+  - Developer and CI/CD workflows validating required environment variables.
+level: high
+tags:
+  - attack.credential-access
+  - attack.t1552
+  - attack.execution
+  - attack.t1059
+  - detection.ai-enabled-threat
+fields:
+  - Image
+  - ParentImage
+  - CommandLine
+  - User
+  - CurrentDirectory
