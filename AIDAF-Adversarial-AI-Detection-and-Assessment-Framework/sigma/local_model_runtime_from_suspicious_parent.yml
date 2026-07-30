@@ -1,0 +1,40 @@
+title: Local AI Model Runtime Started by Suspicious Parent Process
+id: c8f165c2-296e-4f4f-aef0-598e9876b3d1
+status: experimental
+description: Detects local model runtimes launched by office applications, script hosts, shells, or common LOLBins. This may indicate unauthorized runtime AI integration in an attack workflow.
+references:
+  - https://github.com/yuval14/Cybersecurity-Detection-Engineering/tree/main/AIDAF-Adversarial-AI-Detection-and-Assessment-Framework
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.execution
+  - attack.t1059
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_runtime:
+    Image|endswith:
+      - '\\ollama.exe'
+      - '\\llama-server.exe'
+      - '\\llama-cli.exe'
+      - '\\lmstudio.exe'
+      - '\\koboldcpp.exe'
+  selection_parent:
+    ParentImage|endswith:
+      - '\\winword.exe'
+      - '\\excel.exe'
+      - '\\powerpnt.exe'
+      - '\\outlook.exe'
+      - '\\mshta.exe'
+      - '\\rundll32.exe'
+      - '\\regsvr32.exe'
+      - '\\wscript.exe'
+      - '\\cscript.exe'
+      - '\\cmd.exe'
+      - '\\powershell.exe'
+  condition: selection_runtime and selection_parent
+falsepositives:
+  - Authorized local model testing initiated from administrative scripts
+  - Security research laboratories
+level: high
