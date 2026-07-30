@@ -60,6 +60,17 @@ These detections are derived from observable tradecraft reported by Unit 42: Her
 
 These rules are derived from Google Threat Intelligence Group reporting on PROMPTFLUX, PROMPTSTEAL/LAMEHUG, QUIETVAULT, and PROMPTLOCK. They focus on direct runtime model integration, generated-command execution, AI-assisted secret search, dynamic script creation, persistence, collection, propagation, and exfiltration.
 
+### Provider-Reported AI Infrastructure, Agent and Supply-Chain Rules
+
+- `automated_premium_llm_account_registration.yml`
+- `multi_provider_llm_relay_service.yml`
+- `malicious_ai_agent_skill_executes_shell.yml`
+- `android_ai_agent_accessibility_command_loop.yml`
+- `ai_agent_invalid_credential_retry_loop.yml`
+- `ai_orchestrated_multi_stage_attack_correlation.yml`
+
+These detections are based on Microsoft Threat Intelligence, OpenAI, Anthropic, and GTIG reporting. They cover industrialized model-account acquisition, account-pooling relays, malicious agent skills, model-guided Android accessibility actions, invalid-credential adaptation loops, and multi-stage agentic intrusion workflows.
+
 ### Baseline AI Integration Rules
 
 - `ai_client_spawns_script_interpreter.yml`
@@ -79,7 +90,8 @@ These rules are derived from Google Threat Intelligence Group reporting on PROMP
 - Process creation with parent process, command line, user, session, and process GUID
 - Network, DNS, proxy, WAF, web, email, authentication, and MFA telemetry
 - File creation and file access events
-- AI gateway, API gateway, CASB, model-provider, prompt, trace, tool-call, memory, and agent logs where available
+- Android accessibility, UI hierarchy, application, and network telemetry where applicable
+- AI gateway, API gateway, CASB, model-provider, prompt, trace, tool-call, memory, skill, plugin, and agent logs where available
 
 ## Validation
 
@@ -92,4 +104,4 @@ These rules are derived from Google Threat Intelligence Group reporting on PROMP
 
 ## Analytic Guardrail
 
-Detect the workflow and observable tradecraft, not writing style or sophistication. External adaptation is generally circumstantial evidence. Direct runtime, prompt, trace, API-key, model, agent, and provider artifacts support stronger assessments.
+Detect the workflow and observable tradecraft, not writing style or sophistication. External adaptation is generally circumstantial evidence. Direct runtime, prompt, trace, API-key, model, agent, skill, plugin, and provider artifacts support stronger assessments.

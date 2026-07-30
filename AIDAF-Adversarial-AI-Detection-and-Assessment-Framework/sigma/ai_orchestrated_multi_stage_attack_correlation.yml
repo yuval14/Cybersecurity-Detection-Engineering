@@ -1,0 +1,32 @@
+title: AI-Orchestrated Multi-Stage Attack Sequence
+id: 6fc5ad1b-46b5-471c-9a5e-6745ad6bc106
+status: experimental
+description: Correlates repeated agent or model activity with discovery, credential attempts, command execution, collection, and exfiltration across a common execution context. Based on Microsoft, Anthropic, OpenAI, and GTIG reporting on AI-enabled operational workflows.
+references:
+  - https://www.microsoft.com/en-us/security/blog/2026/03/06/ai-as-tradecraft-how-threat-actors-operationalize-ai/
+  - https://www.anthropic.com/news/disrupting-AI-espionage
+  - https://openai.com/index/disrupting-malicious-ai-uses/
+  - https://cloud.google.com/blog/topics/threat-intelligence/ai-vulnerability-exploitation-initial-access/
+author: Yuval Sinay
+date: 2026-07-30
+correlation:
+  type: temporal_ordered
+  rules:
+    - ai_or_model_runtime_activity
+    - host_or_network_discovery
+    - credential_attempt_or_secret_access
+    - shell_or_tool_execution
+    - sensitive_data_collection
+    - external_transfer_or_c2
+  group-by:
+    - host
+    - user
+    - process_tree
+  timespan: 60m
+level: critical
+falsepositives:
+  - Authorized red-team or purple-team exercises
+  - Approved autonomous security testing
+notes:
+  - Require at least one direct AI integration artifact before assigning AIDAF E3 or above.
+  - Preserve failures, tool outputs, prompts, trace IDs, and process relationships.

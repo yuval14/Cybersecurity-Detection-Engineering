@@ -1,0 +1,44 @@
+title: Automated Premium LLM Account Registration Workflow
+id: 4a4f9b15-a19c-4d63-b4be-34ac47c7c101
+status: experimental
+description: Detects scripts that automate premium LLM account registration, CAPTCHA or SMS verification, account status checks, and cancellation. Based on GTIG observations of adversaries industrializing model access through account cycling.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/ai-vulnerability-exploitation-initial-access/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.resource-development
+  - attack.t1588.007
+  - aidaf.external
+  - aidaf.case.gtig-2026
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  process:
+    Image|endswith:
+      - '/python'
+      - '/python3'
+      - '/node'
+  registration_terms:
+    CommandLine|contains:
+      - 'register_account'
+      - 'auto_register'
+      - 'captcha'
+      - 'sms_verification'
+      - 'verify_phone'
+      - 'cancel_subscription'
+      - 'account_status'
+  model_terms:
+    CommandLine|contains:
+      - 'chatgpt'
+      - 'openai'
+      - 'claude'
+      - 'anthropic'
+      - 'gemini'
+      - 'deepseek'
+  condition: process and registration_terms and model_terms
+falsepositives:
+  - Authorized identity testing
+  - Provider quality-assurance automation
+level: high

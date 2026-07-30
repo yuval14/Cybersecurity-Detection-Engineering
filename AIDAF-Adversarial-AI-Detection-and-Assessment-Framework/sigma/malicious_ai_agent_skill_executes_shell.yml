@@ -1,0 +1,48 @@
+title: AI Agent Skill Package Executes Shell or Downloads Payload
+id: a2ca0e61-d703-41b7-8bd4-7e4bd3e3c103
+status: experimental
+description: Detects an AI agent or skill package launching a shell, downloader, or interpreter from a skill or plugin directory. Based on GTIG reporting on weaponized OpenClaw skills and AI agent supply-chain abuse.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/ai-vulnerability-exploitation-initial-access/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.initial-access
+  - attack.t1195.002
+  - attack.execution
+  - attack.t1059
+  - aidaf.internal
+  - aidaf.case.gtig-2026
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  parent_context:
+    ParentCommandLine|contains:
+      - 'openclaw'
+      - 'clawhub'
+      - '/skills/'
+      - '/plugins/'
+      - 'agent_skill'
+  child:
+    Image|endswith:
+      - '/bash'
+      - '/sh'
+      - '/python'
+      - '/python3'
+      - '/curl'
+      - '/wget'
+      - '/node'
+  suspicious_args:
+    CommandLine|contains:
+      - 'http://'
+      - 'https://'
+      - 'base64 -d'
+      - 'chmod +x'
+      - '/tmp/'
+      - '/dev/shm/'
+  condition: parent_context and child and suspicious_args
+falsepositives:
+  - Approved agent skills with documented tool execution
+  - Security testing environments
+level: high

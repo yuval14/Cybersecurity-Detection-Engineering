@@ -1,0 +1,39 @@
+title: Android AI Agent Accessibility Command Loop
+id: 5f916ed4-0c4e-4f3e-9305-68b42372c104
+status: experimental
+description: Detects an Android process repeatedly serializing UI hierarchy data, communicating with a generative model endpoint, and issuing accessibility actions. Modeled on GTIG reporting about PROMPTSPY-style autonomous command generation.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/ai-vulnerability-exploitation-initial-access/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.execution
+  - attack.command-and-control
+  - aidaf.internal
+  - aidaf.case.gtig-2026
+logsource:
+  category: application
+  product: android
+detection:
+  ui_context:
+    event.action|contains:
+      - 'dumpWindowHierarchy'
+      - 'uiautomator'
+      - 'accessibility_node_info'
+      - 'xml_ui_hierarchy'
+  model_context:
+    destination.domain|endswith:
+      - 'generativelanguage.googleapis.com'
+      - 'googleapis.com'
+  action_context:
+    event.action|contains:
+      - 'performAction'
+      - 'dispatchGesture'
+      - 'click'
+      - 'setText'
+      - 'scroll'
+  condition: ui_context and model_context and action_context
+falsepositives:
+  - Authorized accessibility testing
+  - Mobile QA automation
+level: high
