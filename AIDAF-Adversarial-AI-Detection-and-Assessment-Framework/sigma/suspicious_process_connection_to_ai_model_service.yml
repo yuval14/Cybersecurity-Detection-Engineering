@@ -1,0 +1,39 @@
+title: Suspicious Process Connection to External AI Model Service
+id: 2d9b4c59-7b8b-4b69-9ec7-5c5d9cbf3c92
+status: experimental
+description: Detects network connections from scripting, exploitation, or administration processes to common external AI model service endpoints. This is an investigative signal and does not prove adversarial AI use.
+references:
+  - https://github.com/yuval14/Cybersecurity-Detection-Engineering/tree/main/AIDAF-Adversarial-AI-Detection-and-Assessment-Framework
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.command-and-control
+  - attack.t1102
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection_process:
+    Image|endswith:
+      - '\\powershell.exe'
+      - '\\pwsh.exe'
+      - '\\python.exe'
+      - '\\pythonw.exe'
+      - '\\wscript.exe'
+      - '\\cscript.exe'
+      - '\\rundll32.exe'
+      - '\\mshta.exe'
+  selection_destination:
+    DestinationHostname|endswith:
+      - '.openai.com'
+      - '.anthropic.com'
+      - '.googleapis.com'
+      - '.generativelanguage.googleapis.com'
+      - '.mistral.ai'
+      - '.cohere.ai'
+      - '.huggingface.co'
+  condition: selection_process and selection_destination
+falsepositives:
+  - Authorized development, data-science, automation, or security-testing activity
+  - Enterprise applications that legitimately invoke model APIs through scripting runtimes
+level: medium
