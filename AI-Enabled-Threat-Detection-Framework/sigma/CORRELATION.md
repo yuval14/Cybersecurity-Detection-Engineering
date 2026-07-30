@@ -100,12 +100,92 @@ Within three minutes:
 
 This pattern may indicate AI generation, template-based automation, or conventional malware adaptation. Treat it as supporting evidence only.
 
+## 6. External Adaptive Web Reconnaissance
+
+### Objective
+
+Identify an external source that changes its reconnaissance or exploitation strategy in response to the organization's web-service responses.
+
+### Logic
+
+Within ten minutes for the same source IP, infrastructure cluster, or session:
+
+1. The source probes several unrelated endpoint families or technologies.
+2. The organization returns distinguishable responses such as 200, 401, 403, 404, 405, or 500.
+3. The source rapidly shifts URI, method, header, encoding, or payload family in a manner relevant to the previous response.
+4. The source continues against newly identified technologies rather than replaying a fixed list.
+
+Use `external_rapid_web_probe_variation.yml` as an atomic signal. Increase confidence when URI diversity, payload-family diversity, and response-conditioned changes all exceed the local baseline.
+
+### Alternative explanations
+
+- Conventional vulnerability scanners.
+- Human penetration testers.
+- Large distributed scanning frameworks.
+- Precomputed decision trees.
+
+## 7. External Authentication Strategy Adaptation
+
+### Objective
+
+Identify rapid changes in external credential-access behavior following distinct authentication failures.
+
+### Logic
+
+Within 15 minutes for the same source or related infrastructure:
+
+1. Multiple authentication failures occur.
+2. Failure reasons differ, such as unknown user, invalid password, MFA required, protocol rejected, or account locked.
+3. The source changes usernames, protocol, authentication method, pacing, or target application.
+4. A later attempt succeeds or reaches a different authentication stage.
+
+Use `external_authentication_strategy_variation.yml` as an atomic signal. Correlate identity, VPN, SaaS, cloud, and application authentication telemetry.
+
+### Escalation factors
+
+- Attempts move between services while preserving target identity context.
+- The strategy changes within seconds of receiving a distinct error.
+- The source avoids previously triggered lockout or rate-limit conditions.
+- The same infrastructure conducts tailored social engineering against the account.
+
+## 8. External Dynamic Exploit Payload Variation
+
+### Objective
+
+Identify target-specific or response-conditioned command-injection payload generation from an external source.
+
+### Logic
+
+Within ten minutes against the same host, application, or vulnerable parameter:
+
+1. Multiple command-injection payload families are observed.
+2. Encoding, shell, command separator, or execution method changes between attempts.
+3. Changes follow different HTTP status codes, WAF blocks, parser errors, or application responses.
+4. A later request produces a materially different response, callback, process event, or file event.
+
+Use `external_dynamic_command_injection_variants.yml` as an atomic signal. Correlate WAF, reverse proxy, application, EDR, DNS, and egress telemetry.
+
+### Escalation factors
+
+- Payloads contain values learned from earlier responses.
+- The source changes between Windows and Unix command syntax after platform discovery.
+- A successful callback follows several semantically related corrections.
+- The campaign generates distinct payloads for different targets rather than replaying one artifact.
+
+## External-Adversary Analytic Guardrail
+
+For an external attacker, absence of internal AI API traffic is expected when the attacker performs inference on attacker-controlled infrastructure. Do not reduce confidence solely because the organization cannot observe prompts, model calls, or agent state.
+
+At the same time, none of the external-facing Sigma rules proves AI use. A stronger assessment requires multiple independent signals, response-conditioned adaptation, intelligence corroboration, captured attacker infrastructure, provider evidence, or repeated behavior that is difficult to explain through conventional automation.
+
 ## Analytic Handling
 
 A correlation match must be recorded as a lead, not proof of AI use. Analysts should:
 
 - Preserve the complete timeline and relevant files.
-- Determine whether the AI service or runtime is approved.
-- Examine alternative explanations such as conventional automation or authorized testing.
+- Determine whether the AI service or runtime is approved when internal execution is observed.
+- Cluster external source infrastructure rather than relying only on one IP address.
+- Retain server responses and failure reasons needed to test whether later actions were adaptive.
+- Examine alternative explanations such as conventional automation, distributed scanning, or authorized testing.
 - Assign AIDF evidence and confidence levels.
 - Seek direct or strong technical evidence before making a confirmed assessment.
