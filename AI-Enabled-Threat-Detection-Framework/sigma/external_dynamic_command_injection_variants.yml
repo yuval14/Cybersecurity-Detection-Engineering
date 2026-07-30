@@ -1,0 +1,59 @@
+title: Multiple External Command Injection Payload Variants
+id: 4cb3d27f-b20f-4f41-ae93-c9fe14b83611
+status: experimental
+description: Detects external web requests containing several command-execution payload families. High variation over a short period may support investigation of adaptive or AI-assisted exploitation, but this signal is not proof of AI use.
+author: Yuval Sinay
+date: 2026-07-30
+references:
+  - https://attack.mitre.org/techniques/T1190/
+logsource:
+  category: webserver
+  definition: Requires WAF, reverse proxy, or web access logs that preserve URI and request-body indicators where legally permitted.
+detection:
+  selection_payload:
+    cs-uri-query|contains:
+      - 'cmd='
+      - 'exec='
+      - 'command='
+      - 'powershell'
+      - 'pwsh'
+      - '/bin/sh'
+      - '/bin/bash'
+      - 'whoami'
+      - 'curl%20'
+      - 'wget%20'
+      - '${IFS}'
+      - '%24%28'
+      - '%60'
+      - '|id'
+      - ';id'
+      - '&&id'
+  filter_internal:
+    c-ip|cidr:
+      - '10.0.0.0/8'
+      - '172.16.0.0/12'
+      - '192.168.0.0/16'
+      - '127.0.0.0/8'
+  condition: selection_payload and not filter_internal
+fields:
+  - c-ip
+  - cs-host
+  - cs-method
+  - cs-uri-stem
+  - cs-uri-query
+  - sc-status
+  - cs-user-agent
+falsepositives:
+  - Authorized penetration tests
+  - Vulnerability scanners
+  - Security research traffic
+  - Application parameters that legitimately contain command-like strings
+level: high
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - aidf.external_adversary
+  - aidf.dynamic_artifact_generation
+  - aidf.signal_only
+# Correlate by source IP and target over a short window. Increase confidence when payload
+# encoding, shell family, or command structure changes after different server responses.
