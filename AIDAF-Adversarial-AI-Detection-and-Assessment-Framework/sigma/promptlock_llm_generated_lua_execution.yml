@@ -1,0 +1,47 @@
+title: Go Ransomware Generates and Executes Lua Scripts at Runtime
+id: c44dcb0d-7147-44e8-bb18-151cb94c2606
+status: experimental
+description: Detects a Go-based or unknown executable creating and immediately executing Lua scripts from a writable location, reflecting the PROMPTLOCK proof-of-concept workflow for LLM-generated reconnaissance, exfiltration, and encryption logic.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/threat-actor-usage-of-ai-tools
+  - https://attack.mitre.org/techniques/T1059/
+  - https://attack.mitre.org/techniques/T1486/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.impact
+  - attack.t1486
+  - aidaf.internal
+  - aidaf.case.promptlock
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_interpreter:
+    Image|endswith:
+      - '\lua.exe'
+      - '\luajit.exe'
+  selection_path:
+    CommandLine|contains:
+      - '\AppData\Local\Temp\'
+      - '\Windows\Temp\'
+      - '\ProgramData\'
+      - '\Users\Public\'
+  selection_script:
+    CommandLine|contains:
+      - '.lua'
+  suspicious_parent:
+    ParentImage|endswith:
+      - '\promptlock.exe'
+      - '\ransomware.exe'
+      - '\loader.exe'
+      - '\update.exe'
+  condition: selection_interpreter and selection_path and selection_script and suspicious_parent
+falsepositives:
+  - Approved Lua-based software or test automation
+  - Malware research laboratories
+level: critical
+notes:
+  - Correlate with model API traffic, rapid Lua file creation, filesystem enumeration, archive creation, or file-encryption behavior.
