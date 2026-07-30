@@ -1,0 +1,49 @@
+title: AI-Linked Process Modifies Agent Policy Memory or Configuration
+id: 34248d40-6c6d-48d4-87c4-4714ac833579
+status: experimental
+description: Detects AI-linked processes modifying files commonly used for agent instructions, memory, tool configuration, policy, or environment secrets. This supports investigation of persistence, tampering, and privilege expansion in agentic workflows.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_process:
+    Image|endswith:
+      - "\\ollama.exe"
+      - "\\lmstudio.exe"
+      - "\\aider.exe"
+      - "\\cursor.exe"
+      - "\\claude.exe"
+      - "\\python.exe"
+  selection_target:
+    TargetFilename|endswith:
+      - "\\AGENTS.md"
+      - "\\CLAUDE.md"
+      - "\\SYSTEM.md"
+      - "\\memory.json"
+      - "\\memory.db"
+      - "\\tools.json"
+      - "\\mcp.json"
+      - "\\policy.json"
+      - "\\config.yaml"
+      - "\\config.yml"
+      - "\\.env"
+  condition: selection_process and selection_target
+fields:
+  - Computer
+  - User
+  - Image
+  - ProcessGuid
+  - TargetFilename
+falsepositives:
+  - Authorized agent configuration changes
+  - Coding assistants updating project instructions
+  - AI platform deployment pipelines
+level: high
+tags:
+  - attack.persistence
+  - attack.defense-evasion
+  - aidaf.internal
+  - aidaf.integration
+  - aidaf.ai-stride.tampering
