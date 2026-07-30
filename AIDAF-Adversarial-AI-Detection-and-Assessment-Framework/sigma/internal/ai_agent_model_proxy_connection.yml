@@ -1,0 +1,41 @@
+title: AI Agent or Coding Tool Connection Through Suspicious Model Proxy
+id: 2d0c1b74-b76e-4c70-8db1-6b4e958a7091
+status: experimental
+description: Detects AI coding tools or agent frameworks connecting to a nonstandard proxy or gateway that may conceal access to model providers. Inspired by the Unit 42 autonomous AI campaign.
+references:
+  - https://unit42.paloaltonetworks.com/autonomous-ai-cyber-attack-campaign/
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.command-and-control
+  - attack.t1090
+logsource:
+  category: network_connection
+  product: linux
+detection:
+  selection_process:
+    Image|endswith:
+      - '/claude'
+      - '/codex'
+      - '/qwen'
+      - '/hermes'
+      - '/python'
+      - '/python3'
+      - '/node'
+  selection_proxy:
+    DestinationHostname|contains:
+      - 'newcli'
+      - 'proxy'
+      - 'gateway'
+      - 'relay'
+  filter_authorized:
+    DestinationHostname|endswith:
+      - '.openai.com'
+      - '.anthropic.com'
+      - '.deepseek.com'
+      - '.aliyuncs.com'
+  condition: selection_process and selection_proxy and not filter_authorized
+falsepositives:
+  - Approved enterprise AI gateways
+  - Developer testing environments
+level: medium
