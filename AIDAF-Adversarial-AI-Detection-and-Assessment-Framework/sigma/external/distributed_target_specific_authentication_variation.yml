@@ -1,0 +1,38 @@
+title: Distributed Target-Specific Authentication Strategy Variation
+id: e882c6bf-9e0f-47c8-bf17-6cbb4f4c2dc9
+status: experimental
+description: Detects failed external authentication activity using multiple credential or protocol strategies against the same account or application. Correlation across sources and methods is required in the SIEM.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: authentication
+detection:
+  selection_failure:
+    event.outcome: failure
+  selection_external:
+    source.ip|cidr:
+      - 0.0.0.0/0
+  filter_private:
+    source.ip|cidr:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      - 127.0.0.0/8
+  condition: selection_failure and selection_external and not filter_private
+fields:
+  - source.ip
+  - user.name
+  - destination.ip
+  - service.name
+  - authentication.method
+  - user_agent.original
+falsepositives:
+  - Users with stale credentials
+  - Misconfigured applications
+  - Authorized password spraying assessments
+level: medium
+tags:
+  - attack.credential-access
+  - attack.t1110
+  - aidaf.external
+  - aidaf.dynamic-behavior
