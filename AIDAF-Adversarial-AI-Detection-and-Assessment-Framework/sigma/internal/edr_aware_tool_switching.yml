@@ -1,0 +1,31 @@
+title: Security Tool Aware Execution Method Switching
+id: 77917fd6-7600-4a66-bc2a-f08eec1b9106
+status: experimental
+description: Detects a sequence of different script interpreters or living-off-the-land binaries on one host following blocked or failed execution. This may indicate adaptive defense-evasion logic, including AI-assisted selection.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  tools:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\mshta.exe'
+      - '\rundll32.exe'
+      - '\regsvr32.exe'
+      - '\certutil.exe'
+      - '\wmic.exe'
+      - '\installutil.exe'
+  condition: tools
+falsepositives:
+  - Administrative automation
+  - Software installation
+  - Security testing
+level: medium
+tags:
+  - attack.defense_evasion
+  - attack.t1218
+  - aidaf.internal
+  - aidaf.e2
