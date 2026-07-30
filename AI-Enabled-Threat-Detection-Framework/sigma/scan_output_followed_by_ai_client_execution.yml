@@ -1,0 +1,68 @@
+title: Reconnaissance Output Passed to AI Client or Agent Script
+id: 7397eb12-7147-47e0-8712-c4e0b629ba30
+status: experimental
+description: Detects an interpreter or AI client command line that references common reconnaissance result files or scanner output names. This is a single-event approximation of a higher-value temporal correlation use case.
+author: Yuval Sinay
+date: 2026-07-30
+references:
+  - https://github.com/yuval14/Cybersecurity-Detection-Rules/tree/main/AI-Enabled-Threat-Detection-Framework
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_process:
+    Image|endswith:
+      - '\python.exe'
+      - '\python3.exe'
+      - '\py.exe'
+      - '\node.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\ollama.exe'
+      - '\llama-cli.exe'
+  selection_ai_terms:
+    CommandLine|contains:
+      - 'openai'
+      - 'anthropic'
+      - 'langchain'
+      - 'langgraph'
+      - 'autogen'
+      - 'crewai'
+      - 'ollama'
+      - 'llama'
+      - 'agent'
+      - 'prompt'
+  selection_scan_artifact:
+    CommandLine|contains:
+      - 'nmap.xml'
+      - 'nmap.txt'
+      - 'masscan.json'
+      - 'masscan.txt'
+      - 'nuclei.json'
+      - 'nuclei.txt'
+      - 'gobuster.txt'
+      - 'ffuf.json'
+      - 'feroxbuster'
+      - 'scan_results'
+      - 'recon_results'
+  filter_approved:
+    CommandLine|contains:
+      - '\approved-ai\'
+      - '\security-validation\'
+  condition: all of selection_* and not filter_approved
+falsepositives:
+  - Authorized penetration testing, purple-team, or vulnerability-management workflows.
+  - Security research that uses AI to summarize scanner results.
+level: high
+tags:
+  - attack.discovery
+  - attack.t1046
+  - attack.execution
+  - attack.t1059
+  - detection.ai-enabled-threat
+fields:
+  - Image
+  - ParentImage
+  - CommandLine
+  - User
+  - CurrentDirectory
