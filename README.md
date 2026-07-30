@@ -1,5 +1,16 @@
-# Cybersecurity-Detection-Rules
-Cyber Detection Rules
+# Cybersecurity Detection Engineering
+
+A practical repository for building, validating, governing, and maintaining cybersecurity detections across their full lifecycle.
+
+The repository extends beyond individual detection rules and includes:
+
+- Detection Engineering Frameworks
+- Sigma Rules
+- Correlation Logic
+- Detection Lifecycle Methods
+- Threat Hunting Methodologies
+- AI-Enabled Detection Frameworks
+- Detection Governance and Validation
 
 ---
 
@@ -80,6 +91,21 @@ Required safeguards include:
 - Network telemetry (DNS, proxy, NetFlow)
 
 Sigma rules may be used as the **authoritative source**, with platform-specific rules derived from them where applicable.
+
+---
+
+## 🔗 Repository Location
+
+Canonical repository:
+
+`https://github.com/yuval14/Cybersecurity-Detection-Engineering`
+
+For existing local clones, update the remote with:
+
+```bash
+git remote set-url origin https://github.com/yuval14/Cybersecurity-Detection-Engineering.git
+git remote -v
+```
 
 ---
 
