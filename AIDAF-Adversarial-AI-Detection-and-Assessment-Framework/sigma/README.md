@@ -2,43 +2,81 @@
 
 ## Purpose
 
-These experimental Sigma rules provide investigation signals related to adversarial AI integration. They do not independently prove that an attacker used AI.
+This directory is the single flat library for all AIDAF Sigma YAML rules. Rules are not separated into `external`, `internal`, or `case-studies` subdirectories. Operational context is preserved through file names, descriptions, references, and tags such as `aidaf.external`, `aidaf.internal`, and `aidaf.case.unit42`.
 
-## Rule Catalog
+Every rule is an experimental investigation signal. No individual match independently proves that an attacker used AI.
 
-| Rule | Primary signal | AIDAF dimension |
-|---|---|---|
-| `suspicious_process_connection_to_ai_model_service.yml` | Script or administration process connects to an external model service | Access / Integration |
-| `ai_client_spawns_script_interpreter.yml` | AI client or agent framework launches a shell or interpreter | Integration |
-| `local_model_runtime_from_suspicious_parent.yml` | Local model runtime starts from an unusual parent | Access / Integration |
-| `generated_script_execution_from_temporary_directory.yml` | Script interpreter executes code from a temporary or user-writable path | Dynamic Behavior / Output |
+## Detection Groups
+
+### External AI-Enabled Adversary
+
+- `adaptive_directory_discovery_after_http_denials.yml`
+- `adaptive_password_spray_strategy.yml`
+- `distributed_target_specific_authentication_variation.yml`
+- `high_variation_phishing_from_shared_infrastructure.yml`
+- `mfa_fatigue_with_variable_cadence.yml`
+- `rapid_web_payload_variation_after_errors.yml`
+
+These rules usually provide E1-E2 behavioral evidence because the adversary's model, prompts, agent, and infrastructure remain outside organizational visibility.
+
+### Intrusion and Post-Compromise AI Use
+
+- `adaptive_protocol_switch_after_remote_access_failure.yml`
+- `agent_trace_or_prompt_artifact_creation.yml`
+- `ai_agent_spawns_multiple_network_tools.yml`
+- `ai_client_following_host_discovery.yml`
+- `ai_linked_process_modifies_agent_policy_or_memory.yml`
+- `edr_aware_tool_switching.yml`
+- `local_model_download_after_suspicious_execution.yml`
+- `repeated_agent_tool_execution_loop.yml`
+- `semantic_sensitive_file_discovery.yml`
+- `suspicious_ai_api_key_access.yml`
+- `victim_data_sent_to_ai_service.yml`
+
+These rules can support E2-E4 assessments when correlated with model endpoints, runtimes, API keys, prompts, traces, tool calls, process trees, or provider evidence.
+
+### Unit 42 Autonomous AI Campaign-Derived Rules
+
+- `ai_agent_model_proxy_connection.yml`
+- `fofa_query_followed_by_python_scanner.yml`
+- `github_poc_clone_followed_by_execution.yml`
+- `permissive_ai_agent_execution_configuration.yml`
+- `python_http_server_from_home_directory.yml`
+- `telegram_controlled_agent_spawns_shell.yml`
+- `unit42_autonomous_scan_download_exploit_correlation.yml`
+
+These detections are derived from observable tradecraft reported by Unit 42: Hermes Agent with DeepSeek, FOFA enumeration, GitHub PoC acquisition, threaded Python scanning, model-proxy access, permissive agent settings, Telegram orchestration, and a Python HTTP server started from the operator home directory.
+
+### Baseline AI Integration Rules
+
+- `ai_client_spawns_script_interpreter.yml`
+- `generated_script_execution_from_temporary_directory.yml`
+- `local_model_runtime_from_suspicious_parent.yml`
+- `suspicious_process_connection_to_ai_model_service.yml`
+
+## Guidance
+
+- `DETECTION-TRACKS.md` — interpretation of external versus intrusion/post-compromise activity.
+- `CORRELATION.md` — baseline cross-source correlation guidance.
+- `AI-ATTACK-CORRELATION-CATALOG.md` — expanded attack-stage correlation patterns.
+- `case-studies/UNIT42-AUTONOMOUS-AI-CAMPAIGN.md` — source case analysis; Markdown only, not a rule directory.
 
 ## Required Telemetry
 
-- Process creation with parent process and command line
-- Network connections with process image and destination hostname
-- DNS and proxy telemetry where endpoint destination fields are unavailable
-- File creation telemetry for correlation with generated script execution
-- AI gateway, API gateway, CASB, or model-provider audit logs where available
+- Process creation with parent process, command line, user, session, and process GUID
+- Network, DNS, proxy, WAF, web, email, authentication, and MFA telemetry
+- File creation and file access events
+- AI gateway, API gateway, CASB, model-provider, prompt, trace, tool-call, memory, and agent logs where available
 
 ## Validation
 
-Before deployment:
+1. Validate YAML and Sigma syntax against the selected Sigma tooling.
+2. Map generic fields to the target SIEM schema.
+3. Establish allowlists for approved AI tools, agents, gateways, development systems, scanners, red teams, and research environments.
+4. Test human-only, conventional automation, AI-assisted, and agentic scenarios as separate control groups.
+5. Preserve failures, retries, intermediate outputs, and complete timelines.
+6. Use SIEM correlation before raising the AIDAF evidence level.
 
-1. Validate field mappings against the target SIEM schema.
-2. Establish approved AI tools, service domains, runtimes, and development hosts.
-3. Tune authorized automation, data-science, security-testing, and software-installation activity.
-4. Test the rules using benign simulations and controlled purple-team exercises.
-5. Correlate multiple rules before raising AIDAF evidence above E1.
+## Analytic Guardrail
 
-## Limitations
-
-- Attackers may use private gateways, self-hosted models, proxies, or renamed binaries.
-- Legitimate AI development may resemble malicious integration.
-- External attackers may use AI entirely outside victim visibility.
-- Process names and destination domains are mutable and require local enrichment.
-- Sigma does not reliably express all required temporal and cross-source relationships.
-
-## Analytic Use
-
-Treat each match as a supporting observation. Increase confidence only when the signal aligns with attack-stage activity, a coherent timeline, direct artifacts, threat intelligence, or provider-side evidence.
+Detect the workflow and observable tradecraft, not writing style or sophistication. External adaptation is generally circumstantial evidence. Direct runtime, prompt, trace, API-key, model, agent, and provider artifacts support stronger assessments.

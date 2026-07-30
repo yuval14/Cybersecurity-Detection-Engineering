@@ -10,6 +10,7 @@ tags:
   - attack.exfiltration
   - attack.t1048
   - attack.command-and-control
+  - aidaf.case.unit42
 logsource:
   category: process_creation
   product: linux

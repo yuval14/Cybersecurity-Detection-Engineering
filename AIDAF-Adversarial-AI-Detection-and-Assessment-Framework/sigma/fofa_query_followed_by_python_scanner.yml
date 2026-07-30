@@ -11,6 +11,7 @@ tags:
   - attack.t1595
   - attack.execution
   - attack.t1059.006
+  - aidaf.case.unit42
 logsource:
   category: process_creation
   product: linux

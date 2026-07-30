@@ -10,6 +10,7 @@ tags:
   - attack.command-and-control
   - attack.t1102
   - attack.execution
+  - aidaf.case.unit42
 logsource:
   category: process_creation
   product: linux
