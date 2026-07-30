@@ -1,0 +1,33 @@
+title: PROMPTFLUX Thinking Robot AI Response Log Creation
+id: 2be56990-d7a1-4c92-8b0a-111cb94c2602
+status: experimental
+description: Detects creation of the PROMPTFLUX-style thinking_robot_log.txt artifact in a temporary directory by Windows Script Host or VBScript activity.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/threat-actor-usage-of-ai-tools
+author: Yuval Sinay
+date: 2026-07-30
+tags:
+  - attack.defense_evasion
+  - attack.t1027
+  - aidaf.internal
+  - aidaf.case.promptflux
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection_name:
+    TargetFilename|endswith:
+      - '\thinking_robot_log.txt'
+      - '\thinging_log.txt'
+  selection_path:
+    TargetFilename|contains:
+      - '\AppData\Local\Temp\'
+      - '\Windows\Temp\'
+  selection_process:
+    Image|endswith:
+      - '\wscript.exe'
+      - '\cscript.exe'
+  condition: selection_name and selection_path and selection_process
+falsepositives:
+  - Controlled malware analysis or purple-team simulation
+level: high
