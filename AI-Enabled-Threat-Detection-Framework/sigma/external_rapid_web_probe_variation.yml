@@ -3,7 +3,7 @@ id: 8b6c8129-1c2e-4af2-a53a-b4dbe0b3e4f7
 status: experimental
 description: Detects a high rate of varied web probing patterns from a single external source. This may support investigation of adaptive or AI-assisted reconnaissance, but is not proof of AI use.
 author: Yuval Sinay
- date: 2026-07-30
+date: 2026-07-30
 references:
   - https://attack.mitre.org/techniques/T1595/
 logsource:
