@@ -1,0 +1,29 @@
+title: MFA Fatigue With Variable Request Cadence
+id: 3af814e5-f383-4f75-a449-f4a0f0e69103
+status: experimental
+description: Detects repeated MFA push requests with changing intervals or client attributes. Variable cadence may indicate adaptive social-engineering automation, including AI-assisted decision logic.
+author: Yuval Sinay
+date: 2026-07-30
+logsource:
+  category: authentication
+  definition: Requires MFA request, result, source, target user, client, and timestamp fields.
+detection:
+  selection:
+    authentication_method|contains:
+      - 'push'
+      - 'notification'
+    outcome:
+      - failure
+      - denied
+      - timeout
+  condition: selection
+falsepositives:
+  - User retrying a legitimate sign-in
+  - Mobile connectivity problems
+  - Authentication service faults
+level: medium
+tags:
+  - attack.credential_access
+  - attack.t1621
+  - aidaf.external
+  - aidaf.e1
