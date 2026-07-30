@@ -1,6 +1,8 @@
 # Cybersecurity Detection Engineering
 
-A practical repository for building, validating, governing, and maintaining cybersecurity detections across their full lifecycle.
+## About
+
+A practical, threat-informed repository for designing, validating, governing, and maintaining cybersecurity detections across their full lifecycle. It brings together detection engineering frameworks, Sigma rules, correlation logic, threat-hunting methodologies, log-source confidence assessment, and AI-enabled approaches for identifying both conventional and AI-assisted adversary activity.
 
 The repository extends beyond individual detection rules and includes:
 
