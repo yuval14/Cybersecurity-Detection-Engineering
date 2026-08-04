@@ -1,0 +1,37 @@
+title: Frequent AI API Key Rotation or Pooling for a Single Workload
+id: ce8452f8-8b97-42ca-85cc-17e824274339
+status: experimental
+description: Detects repeated AI API key changes, quota failures, or inconsistent source locations for one workload or application identity. Intended to identify stolen, disposable, or pooled model-service credentials.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/ai-vulnerability-exploitation-initial-access
+  - https://attack.mitre.org/techniques/T1552/001/
+author: Yuval Sinay
+date: 2026-08-05
+tags:
+  - attack.credential-access
+  - attack.t1552.001
+  - attack.defense-evasion
+  - aidaf.external
+  - aidaf.internal
+logsource:
+  category: application
+  product: ai_gateway
+detection:
+  selection_events:
+    event_type:
+      - 'api_key_created'
+      - 'api_key_rotated'
+      - 'api_key_changed'
+      - 'quota_exceeded'
+      - 'authentication_failed'
+  timeframe: 1h
+  condition: selection_events | count(api_key_id) by workload_id > 5
+falsepositives:
+  - Approved key-rotation testing
+  - Disaster-recovery or multi-region deployment activity
+  - Migration between AI providers or gateway platforms
+level: high
+notes:
+  - The logsource and fields are intentionally generic and require mapping to the local AI gateway, provider, secret manager, or API-management schema.
+  - Enrich with source IP, geography, user agent, overlapping key validity, deployment topology, and workload identity.
+  - Consider a longer-period hunt for pooled keys used by many unrelated hosts or countries.
