@@ -1,0 +1,56 @@
+title: Shell Execution Shortly After Browser-Based AI Troubleshooting Workflow
+id: 9b97b02f-f257-456e-9ba2-a9a815709a4d
+status: experimental
+description: Detects a browser spawning a shell with encoded, download, or execution-oriented arguments. Intended for SIEM correlation with recent access to a publicly shared AI conversation in ClickFix-style activity.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/distillation-experimentation-integration-ai-adversarial-use
+  - https://attack.mitre.org/techniques/T1204/002/
+author: Yuval Sinay
+date: 2026-08-05
+tags:
+  - attack.initial-access
+  - attack.t1204.002
+  - attack.execution
+  - attack.t1059.001
+  - aidaf.external
+  - aidaf.case.ai-share-link-clickfix
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\chrome.exe'
+      - '\msedge.exe'
+      - '\firefox.exe'
+      - '\brave.exe'
+      - '\opera.exe'
+  selection_shell:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\cmd.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\mshta.exe'
+  selection_command:
+    CommandLine|contains:
+      - '-enc'
+      - '-encodedcommand'
+      - 'Invoke-WebRequest'
+      - 'iwr '
+      - 'curl '
+      - 'wget '
+      - 'DownloadString'
+      - 'FromBase64String'
+      - 'mshta http'
+      - 'rundll32'
+  condition: selection_parent and selection_shell and selection_command
+falsepositives:
+  - Legitimate administrator troubleshooting initiated from a browser
+  - Approved support portals that launch management tools
+  - Security awareness or red-team exercises
+level: high
+notes:
+  - Correlate with proxy or browser telemetry showing a public AI conversation or share-link path within the previous 30 minutes.
+  - A browser-to-shell relationship does not independently prove AI involvement.
