@@ -1,0 +1,51 @@
+title: Unauthorized Server or Critical Workload Connection to AI Model Service
+id: d2530324-184f-4598-9763-c8db0db7f0af
+status: experimental
+description: Detects a production server, domain controller, appliance, or critical workload without an approved AI use case communicating with an external model endpoint, model-compatible relay, or local inference service.
+references:
+  - ../AI-Enabled-Detection-and-Hunting-Catalog.md
+author: Yuval Sinay
+date: 2026-08-05
+tags:
+  - aidaf.internal
+  - attack.command-and-control
+  - attack.execution
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection_asset:
+    AssetRole|contains:
+      - production-server
+      - domain-controller
+      - critical-workload
+      - network-appliance
+  selection_ai_destination:
+    DestinationCategory:
+      - ai-model-service
+      - model-api
+      - model-compatible-proxy
+      - local-inference
+  filter_approved:
+    AIUseCaseApproved: true
+  condition: selection_asset and selection_ai_destination and not filter_approved
+fields:
+  - Computer
+  - User
+  - ProcessName
+  - ParentProcessName
+  - DestinationHostname
+  - DestinationIp
+  - DestinationPort
+  - WorkloadIdentity
+  - AIUseCaseApproved
+falsepositives:
+  - Approved analytics or observability workloads
+  - Embedded AI product features
+  - Authorized security testing
+level: high
+notes:
+  - Adapt AssetRole, DestinationCategory, and AIUseCaseApproved to the local schema.
+  - Correlate with process creation, DNS, proxy, workload identity, API gateway, and subsequent file or command activity.
+  - Direct provider access that bypasses an organizational AI gateway should increase priority.
+  - A connection alone does not prove adversarial AI use.
