@@ -60,6 +60,15 @@ These detections are derived from observable tradecraft reported by Unit 42: Her
 
 These rules are derived from Google Threat Intelligence Group reporting on PROMPTFLUX, PROMPTSTEAL/LAMEHUG, QUIETVAULT, and PROMPTLOCK. They focus on direct runtime model integration, generated-command execution, AI-assisted secret search, dynamic script creation, persistence, collection, propagation, and exfiltration.
 
+### Covert AI Operational Detection Additions
+
+- `honestcue_llm_csharp_runtime_compilation.yml`
+- `ai_share_link_followed_by_shell.yml`
+- `new_domain_baas_credential_collection.yml`
+- `frequent_ai_api_key_rotation_or_pooling.yml`
+
+These additions address just-in-time CSharp compilation after model interaction, public AI share-link ClickFix workflows, credential collection through trusted Backend-as-a-Service platforms, and pooled or disposable AI API credentials. They require local enrichment and cross-source correlation.
+
 ### Provider-Reported AI Infrastructure, Agent and Supply-Chain Rules
 
 - `automated_premium_llm_account_registration.yml`
@@ -80,10 +89,12 @@ These detections are based on Microsoft Threat Intelligence, OpenAI, Anthropic, 
 
 ## Guidance
 
-- `DETECTION-TRACKS.md` — interpretation of external versus intrusion/post-compromise activity.
-- `CORRELATION.md` — baseline cross-source correlation guidance.
-- `AI-ATTACK-CORRELATION-CATALOG.md` — expanded attack-stage correlation patterns.
-- `case-studies/UNIT42-AUTONOMOUS-AI-CAMPAIGN.md` — supporting case analysis.
+- `DETECTION-TRACKS.md` - interpretation of external versus intrusion/post-compromise activity.
+- `CORRELATION.md` - baseline cross-source correlation guidance.
+- `AI-ATTACK-CORRELATION-CATALOG.md` - expanded attack-stage correlation patterns.
+- `../AI-Enabled-Detection-and-Hunting-Catalog.md` - fourteen operational detection and hunt scenarios.
+- `../Covert-AI-Enabled-Offensive-Cyber-Operations.md` - threat research, concealment patterns, and defensive implications.
+- `../case-studies/README.md` - HONESTCUE, COINBAIT, AI share-link ClickFix, runtime malware, and agentic-intrusion lessons.
 
 ## Required Telemetry
 
@@ -92,6 +103,7 @@ These detections are based on Microsoft Threat Intelligence, OpenAI, Anthropic, 
 - File creation and file access events
 - Android accessibility, UI hierarchy, application, and network telemetry where applicable
 - AI gateway, API gateway, CASB, model-provider, prompt, trace, tool-call, memory, skill, plugin, and agent logs where available
+- Runtime compiler, model file, GPU, local inference, BaaS, and AI API-key lifecycle telemetry where applicable
 
 ## Validation
 
@@ -101,6 +113,7 @@ These detections are based on Microsoft Threat Intelligence, OpenAI, Anthropic, 
 4. Test human-only, conventional automation, AI-assisted, and agentic scenarios as separate control groups.
 5. Preserve failures, retries, intermediate outputs, and complete timelines.
 6. Use SIEM correlation before raising the AIDAF evidence level.
+7. Validate new rules against approved BaaS projects, build systems, support workflows, and key-rotation processes.
 
 ## Analytic Guardrail
 
