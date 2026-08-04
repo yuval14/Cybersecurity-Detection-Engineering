@@ -1,0 +1,51 @@
+title: Suspicious CSharp Runtime Compilation After AI Model Interaction
+id: 1c08588d-96e4-4fd5-b863-119a4cd32cd7
+status: experimental
+description: Detects suspicious CSharp runtime compilation from script interpreters or non-development processes, intended for correlation with recent AI model or inference traffic and the HONESTCUE-style just-in-time execution pattern.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/distillation-experimentation-integration-ai-adversarial-use
+  - https://attack.mitre.org/techniques/T1027/004/
+author: Yuval Sinay
+date: 2026-08-05
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.defense-evasion
+  - attack.t1027.004
+  - aidaf.internal
+  - aidaf.case.honestcue
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_compiler:
+    Image|endswith:
+      - '\csc.exe'
+      - '\MSBuild.exe'
+    CommandLine|contains:
+      - '.cs'
+      - '/target:'
+      - '/out:'
+  selection_suspicious_parent:
+    ParentImage|endswith:
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\python.exe'
+      - '\pythonw.exe'
+      - '\rundll32.exe'
+      - '\regsvr32.exe'
+  filter_development_paths:
+    CommandLine|contains:
+      - '\Program Files\Microsoft Visual Studio\'
+      - '\BuildTools\'
+      - '\Windows\Microsoft.NET\Framework\'
+  condition: selection_compiler and selection_suspicious_parent and not filter_development_paths
+falsepositives:
+  - Approved build automation or software installation
+  - Developer workstations and security research laboratories
+level: high
+notes:
+  - Correlate with outbound communication to AI model endpoints, source-file creation in temporary directories, assembly loading, or immediate child-process execution.
+  - Runtime compilation alone does not prove AI involvement.
