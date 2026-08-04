@@ -71,6 +71,15 @@ These rules are derived from Google Threat Intelligence Group reporting on PROMP
 
 These detections are based on Microsoft Threat Intelligence, OpenAI, Anthropic, and GTIG reporting. They cover industrialized model-account acquisition, account-pooling relays, malicious agent skills, model-guided Android accessibility actions, invalid-credential adaptation loops, and multi-stage agentic intrusion workflows.
 
+### Covert AI Operation and Trusted-Infrastructure Rules
+
+- `honestcue_llm_csharp_runtime_compilation.yml`
+- `ai_share_link_followed_by_shell_execution.yml`
+- `new_domain_baas_credential_collection.yml`
+- `unauthorized_server_ai_model_connection.yml`
+
+These rules extend AIDAF coverage to model-assisted runtime compilation, AI-hosted ClickFix workflows, credential collection through legitimate Backend-as-a-Service infrastructure, and model-service traffic from servers or critical workloads without an approved AI use case.
+
 ### Baseline AI Integration Rules
 
 - `ai_client_spawns_script_interpreter.yml`
@@ -80,16 +89,24 @@ These detections are based on Microsoft Threat Intelligence, OpenAI, Anthropic, 
 
 ## Guidance
 
-- `DETECTION-TRACKS.md` — interpretation of external versus intrusion/post-compromise activity.
-- `CORRELATION.md` — baseline cross-source correlation guidance.
-- `AI-ATTACK-CORRELATION-CATALOG.md` — expanded attack-stage correlation patterns.
-- `case-studies/UNIT42-AUTONOMOUS-AI-CAMPAIGN.md` — supporting case analysis.
+- `DETECTION-TRACKS.md` - interpretation of external versus intrusion/post-compromise activity.
+- `CORRELATION.md` - baseline cross-source correlation guidance.
+- `AI-ATTACK-CORRELATION-CATALOG.md` - expanded attack-stage correlation patterns.
+- `../AI-Enabled-Detection-and-Hunting-Catalog.md` - fourteen operational detection and hunting scenarios.
+- `../Covert-AI-Enabled-Offensive-Cyber-Operations.md` - threat research, concealment patterns, and defensive implications.
+- `case-studies/UNIT42-AUTONOMOUS-AI-CAMPAIGN.md` - supporting case analysis.
+- `../case-studies/HONESTCUE.md` - runtime model-assisted CSharp compilation case study.
+- `../case-studies/AI-Share-Link-ClickFix.md` - trusted AI conversation ClickFix case study.
+- `../case-studies/COINBAIT.md` - AI-assisted phishing and Backend-as-a-Service case study.
 
 ## Required Telemetry
 
 - Process creation with parent process, command line, user, session, and process GUID
 - Network, DNS, proxy, WAF, web, email, authentication, and MFA telemetry
 - File creation and file access events
+- Browser history or secure-web-gateway events for public AI share links
+- Compiler, assembly-load, script-interpreter, and in-memory execution telemetry
+- Domain age, brand, certificate, referrer, form, and Backend-as-a-Service project context
 - Android accessibility, UI hierarchy, application, and network telemetry where applicable
 - AI gateway, API gateway, CASB, model-provider, prompt, trace, tool-call, memory, skill, plugin, and agent logs where available
 
@@ -97,11 +114,12 @@ These detections are based on Microsoft Threat Intelligence, OpenAI, Anthropic, 
 
 1. Validate YAML and Sigma syntax against the selected Sigma tooling.
 2. Map generic fields to the target SIEM schema.
-3. Establish allowlists for approved AI tools, agents, gateways, development systems, scanners, red teams, and research environments.
+3. Establish allowlists for approved AI tools, agents, gateways, development systems, compilers, scanners, red teams, and research environments.
 4. Test human-only, conventional automation, AI-assisted, and agentic scenarios as separate control groups.
 5. Preserve failures, retries, intermediate outputs, and complete timelines.
 6. Use SIEM correlation before raising the AIDAF evidence level.
+7. Validate trusted-infrastructure detections without globally blocking AI, CDN, GitHub, or Backend-as-a-Service platforms.
 
 ## Analytic Guardrail
 
-Detect the workflow and observable tradecraft, not writing style or sophistication. External adaptation is generally circumstantial evidence. Direct runtime, prompt, trace, API-key, model, agent, skill, plugin, and provider artifacts support stronger assessments.
+Detect the workflow and observable tradecraft, not writing style or sophistication. External adaptation is generally circumstantial evidence. Direct runtime, prompt, trace, API-key, model, agent, skill, plugin, compiler, generated-artifact, and provider artifacts support stronger assessments.
