@@ -36,12 +36,13 @@ detection:
       - '\pythonw.exe'
       - '\rundll32.exe'
       - '\regsvr32.exe'
-  filter_development_paths:
-    CommandLine|contains:
+  filter_approved_build_context:
+    ParentCommandLine|contains:
       - '\Program Files\Microsoft Visual Studio\'
       - '\BuildTools\'
-      - '\Windows\Microsoft.NET\Framework\'
-  condition: selection_compiler and selection_suspicious_parent and not filter_development_paths
+      - '\Azure DevOps\Agent\'
+      - '\GitHub Actions\'
+  condition: selection_compiler and selection_suspicious_parent and not filter_approved_build_context
 falsepositives:
   - Approved build automation or software installation
   - Developer workstations and security research laboratories
@@ -49,3 +50,4 @@ level: high
 notes:
   - Correlate with outbound communication to AI model endpoints, source-file creation in temporary directories, assembly loading, or immediate child-process execution.
   - Runtime compilation alone does not prove AI involvement.
+  - Asset-role and approved-build-runner allowlists are required for production deployment.
