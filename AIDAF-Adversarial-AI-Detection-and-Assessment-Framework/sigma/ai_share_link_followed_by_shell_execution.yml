@@ -1,0 +1,34 @@
+title: Public AI Shared Conversation Followed by Shell Execution
+id: 0ec31633-b52c-40ef-b06d-8523d87f616c
+status: experimental
+description: Detects a user accessing a public AI shared-conversation URL followed by PowerShell, command shell, Terminal, Run dialog, AppleScript, or script-interpreter execution within a short period. Intended to identify ClickFix-style activity hosted on trusted AI domains.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/distillation-experimentation-integration-ai-adversarial-use
+  - ../case-studies/AI-Share-Link-ClickFix.md
+author: Yuval Sinay
+date: 2026-08-05
+tags:
+  - aidaf.external
+  - aidaf.case.ai-share-link-clickfix
+  - attack.initial-access
+  - attack.execution
+correlation:
+  type: temporal_ordered
+  rules:
+    - public_ai_shared_conversation_access
+    - interactive_shell_or_run_dialog_execution
+    - suspicious_download_or_follow_on_execution
+  group-by:
+    - User
+    - Computer
+  timespan: 30m
+level: high
+falsepositives:
+  - Legitimate troubleshooting instructions
+  - Administrator support sessions
+  - Authorized security-awareness exercises
+  - Developer documentation shared through an AI service
+notes:
+  - Prioritize encoded commands, download-and-execute behavior, temporary paths, and commands copied from a browser session.
+  - Preserve the shared URL, conversation content, browser history, command line, downloaded artifacts, and initial lure.
+  - Do not block an entire AI provider domain solely because one shared conversation is malicious.
