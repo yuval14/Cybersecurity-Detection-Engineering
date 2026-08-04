@@ -18,16 +18,17 @@ The repository extends beyond individual detection rules and includes:
 
 ## 🧠 Detection Philosophy
 
-- **Behavior over indicators**  
-- **Threat-informed**, aligned with adversary TTPs  
-- **Context-aware**, leveraging correlation and enrichment  
-- **Defender-centric**, written for operational security teams  
+- **Behavior over indicators**
+- **Threat-informed**, aligned with adversary TTPs
+- **Context-aware**, leveraging correlation and enrichment
+- **Defender-centric**, written for operational security teams
 - **Lifecycle-managed**, with documented reasoning, validation, ownership, tuning, and retirement criteria
 
 Where applicable, detections include:
-- MITRE ATT&CK mappings  
-- Tuning guidance  
-- Known evasion considerations  
+
+- MITRE ATT&CK mappings
+- Tuning guidance
+- Known evasion considerations
 - Data-source and schema assumptions
 - Test evidence and lifecycle records
 
@@ -37,10 +38,10 @@ Where applicable, detections include:
 
 Each detection rule should document:
 
-- Detection purpose  
-- Required data sources  
-- Detection logic  
-- Expected false positives and tuning notes  
+- Detection purpose
+- Required data sources
+- Detection logic
+- Expected false positives and tuning notes
 - Suggested severity and confidence level
 - ATT&CK mapping and coverage assumptions
 - Required fields and schema dependencies
@@ -53,15 +54,19 @@ Each detection rule should document:
 ## 📚 Detection Engineering Resources
 
 - [Confidence Scoring for Log Sources](./Log-Source-Confidence-Scoring/README.md)
-- [AIDAF – Adversarial AI Detection and Assessment Framework](./AIDAF-Adversarial-AI-Detection-and-Assessment-Framework/README.md)
-- [AI-Enabled Threat Detection Framework](./AI-Enabled-Threat-Detection-Framework/README.md)
+- [AIDAF - Adversarial AI Detection and Assessment Framework](./AIDAF-Adversarial-AI-Detection-and-Assessment-Framework/README.md)
+- [Covert AI-Enabled Offensive Cyber Operations](./AIDAF-Adversarial-AI-Detection-and-Assessment-Framework/Covert-AI-Enabled-Offensive-Cyber-Operations.md)
+- [AI-Enabled Detection and Hunting Catalog](./AIDAF-Adversarial-AI-Detection-and-Assessment-Framework/AI-Enabled-Detection-and-Hunting-Catalog.md)
+- [AI-Enabled Attack Case Studies](./AIDAF-Adversarial-AI-Detection-and-Assessment-Framework/case-studies/README.md)
 - [Agentic Threat Hunting and Detection Engineering Frameworks - ATHF and ADEF](./Threat-Hunting-Frameworks/Agentic-Threat-Hunting-and-Detection-Engineering-Frameworks.md)
 - [PEAK Threat Hunting Framework](./Threat-Hunting-Frameworks/PEAK-Threat-Hunting-Framework.md)
 - [Sqrrl Threat Hunting Reference Model](./Threat-Hunting-Frameworks/Sqrrl-Threat-Hunting-Reference-Model.md)
 
 AIDAF provides a dedicated assessment layer for determining whether and how an adversary may have used AI during a cyber operation. It evaluates AI operational roles, attack-stage involvement, observable evidence, operational contribution, confidence, and alternative explanations.
 
-The AI-Enabled Threat Detection Framework provides an organizational method for detecting and investigating AI-assisted activity, including supporting Sigma rules and correlation use cases.
+The covert AI-enabled operations research page examines threat evolution, concealment patterns, runtime model integration, agentic orchestration, trusted-infrastructure abuse, and defender evidence requirements.
+
+The AI-enabled detection and hunting catalog translates the research into fourteen operational scenarios, while the AIDAF Sigma pack provides experimental investigation signals and supporting correlation guidance.
 
 The ATHF and ADEF page presents a complementary workflow from a structured threat hunt to a governed production detection. ATHF uses the LOCK lifecycle for threat hunting, while ADEF uses the FORGE lifecycle to preserve detection reasoning, validation, governance, tuning, and review history.
 
@@ -85,12 +90,12 @@ Required safeguards include:
 
 ## ⚙️ Supported Platforms & Formats
 
-- **YARA / YARA-L / YARA-L 2.0**  
-- **Sigma** (generic, SIEM-agnostic format)  
-- **Splunk SPL**  
-- **Elastic (KQL)**  
-- **Microsoft Sentinel (KQL)**  
-- **IBM QRadar (AQL)**  
+- **YARA / YARA-L / YARA-L 2.0**
+- **Sigma** (generic, SIEM-agnostic format)
+- **Splunk SPL**
+- **Elastic (KQL)**
+- **Microsoft Sentinel (KQL)**
+- **IBM QRadar (AQL)**
 - Network telemetry (DNS, proxy, NetFlow)
 
 Sigma rules may be used as the **authoritative source**, with platform-specific rules derived from them where applicable.
@@ -118,10 +123,10 @@ This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**
 
 By using, modifying, or distributing this software, you agree to the following key terms:
 
-- You may use the software for any purpose, including commercial use  
-- If you distribute modified versions, you **must** make the source code available  
-- Derivative works **must** be licensed under GPL-3.0  
-- You may not impose additional legal or technical restrictions  
+- You may use the software for any purpose, including commercial use
+- If you distribute modified versions, you **must** make the source code available
+- Derivative works **must** be licensed under GPL-3.0
+- You may not impose additional legal or technical restrictions
 
 See the `LICENSE` file for the full license text.
 
@@ -131,11 +136,11 @@ See the `LICENSE` file for the full license text.
 
 This repository is provided **as-is** for defensive and research purposes.
 
-- Rules may require environment-specific tuning  
-- Not all detections are production-ready by default  
+- Rules may require environment-specific tuning
+- Not all detections are production-ready by default
 - AI-generated or AI-assisted rules require independent validation
 - ATT&CK mappings do not by themselves demonstrate effective coverage
-- No warranty is provided, express or implied  
+- No warranty is provided, express or implied
 
 ---
 
@@ -146,22 +151,23 @@ Contributions are welcome.
 By submitting a contribution, you agree that your work will be licensed under **GPL-3.0**, consistent with this project.
 
 Please:
-- Follow the repository structure  
-- Document assumptions and limitations  
-- Avoid environment-specific hardcoding  
+
+- Follow the repository structure
+- Document assumptions and limitations
+- Avoid environment-specific hardcoding
 - Include MITRE ATT&CK mappings where relevant
 - Include test evidence and required data fields where feasible
-- Preserve the rationale for material tuning and lifecycle changes  
+- Preserve the rationale for material tuning and lifecycle changes
 
 ---
 
 ## 🎯 Intended Audience
 
-- SOC Analysts  
-- Detection Engineers  
-- Threat Hunters  
-- DFIR Practitioners  
-- Security Researchers  
+- SOC Analysts
+- Detection Engineers
+- Threat Hunters
+- DFIR Practitioners
+- Security Researchers
 
 ---
 
