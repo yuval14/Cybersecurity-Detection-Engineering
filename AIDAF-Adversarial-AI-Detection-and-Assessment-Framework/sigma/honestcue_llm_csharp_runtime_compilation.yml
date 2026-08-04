@@ -1,0 +1,37 @@
+title: Model API Activity Followed by CSharp Runtime Compilation and Execution
+id: f2dc1fde-5922-471b-aaea-068b5d0a82c0
+status: experimental
+description: Correlates a suspicious model API connection with CSharp source creation, runtime compilation, and follow-on execution. The analytic is derived from the HONESTCUE workflow reported by Google Threat Intelligence Group.
+references:
+  - https://cloud.google.com/blog/topics/threat-intelligence/distillation-experimentation-integration-ai-adversarial-use
+  - ../case-studies/HONESTCUE.md
+author: Yuval Sinay
+date: 2026-08-05
+tags:
+  - aidaf.internal
+  - aidaf.case.honestcue
+  - attack.execution
+  - attack.defense-evasion
+correlation:
+  type: temporal_ordered
+  rules:
+    - suspicious_process_connection_to_ai_model_service
+    - csharp_source_creation_outside_development
+    - runtime_csharp_compiler_execution
+    - generated_assembly_or_follow_on_execution
+  group-by:
+    - Computer
+    - User
+    - ProcessGuid
+  timespan: 10m
+level: critical
+falsepositives:
+  - Approved AI coding assistants
+  - Interactive software development
+  - CI/CD and authorized build workers
+  - Security research in an isolated laboratory
+notes:
+  - Implement the source analytics using local rule names or identifiers.
+  - Prioritize temporary paths, user-writable locations, unsigned output, and non-development assets.
+  - Preserve model endpoint, request metadata, source code, compiler command line, generated assembly, and process memory.
+  - This correlation is an investigation signal and does not independently prove adversarial AI use.
