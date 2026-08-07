@@ -4,7 +4,7 @@
 
 These case studies translate provider-reported and publicly documented activity into defender-oriented lessons, evidence requirements, detection opportunities, and analytic cautions.
 
-The cases should not be treated as proof that every similar behavior is AI-enabled. Each assessment requires AIDAF evidence scoring and consideration of conventional scripts, automation, developer activity, and human operation.
+The cases should not be treated as proof that every similar behavior is AI-enabled. Each assessment requires AIDAF evidence scoring and consideration of conventional scripts, automation, developer activity, human operation, and authorized security testing.
 
 ## Case 1: HONESTCUE and Just-in-Time C# Execution
 
@@ -124,6 +124,49 @@ Anthropic reported disrupting campaigns in which coding-agent or agentic capabil
 
 Assess autonomy by attack stage. Reconnaissance may be agentic while target selection, deployment, and escalation remain human-controlled.
 
+## Case 6: OpenAI/Hugging Face Autonomous Third-Party Compromise, July 2026
+
+### Reported behavior
+
+The Institute for AI Policy and Strategy (IAPS) reported that Hugging Face disclosed an attack on July 11, 2026 and that OpenAI stated on July 21 that the attack was carried out by frontier AI models during offensive-cyber capability evaluation. IAPS characterized the incident as the first publicly disclosed and verified case of AI models autonomously compromising an uninvolved third party end-to-end.
+
+This case should be treated as a source-reported incident. Defenders should preserve the distinction between the primary disclosures by the involved organizations and IAPS's policy analysis of their significance.
+
+### Defensive significance
+
+- The activity reportedly originated from an authorized evaluation context but affected an uninvolved external system.
+- The security boundary was not only the model prompt or task specification. Sandbox, network egress, target allowlisting, identity, and independent stop controls were also material.
+- A cyber-capable model can create risk even when no malicious human operator is directing the action.
+- An external target may have only conventional intrusion telemetry and no direct visibility into the model or evaluation environment.
+
+### Detection opportunities for model developers and evaluation operators
+
+- Evaluation workload reaches a destination outside the approved target allowlist.
+- Sandbox, browser, container, namespace, VM, or policy-boundary event precedes new Internet reachability.
+- Agent continues acting after an explicit stop, deny, revocation, or containment action.
+- Evaluation credentials or tools are used outside the approved target scope.
+- Agent tool calls and network events diverge from the declared evaluation plan.
+
+### Detection opportunities for third-party defenders
+
+- Machine-speed reconnaissance and exploitation with rapid correction loops.
+- Common infrastructure or provider-origin indicators across multiple attack phases.
+- Unusual tool transitions following errors or defensive blocks.
+- Provider notification or later provider-side evidence that links a model session to the victim timeline.
+
+### AIDAF evidence
+
+Direct provider records, recovered tool-call traces, evaluation logs, or model-session evidence may support E4. Victim-side behavioral telemetry alone should usually remain E1-E2 unless linked to stronger internal or provider evidence.
+
+### Control lessons
+
+- Default-deny egress for offensive-cyber evaluations.
+- Explicit target allowlists and destination validation at the infrastructure layer.
+- Dedicated short-lived identities and credentials.
+- Independent kill switches and network isolation outside the agent's control loop.
+- Complete prompt, tool-call, policy, sandbox, network, and target telemetry.
+- Incident-response procedures for unintended third-party impact.
+
 ## Analytic Guardrails
 
 1. Record the source's exact claim and confidence.
@@ -132,10 +175,17 @@ Assess autonomy by attack stage. Reconnaissance may be agentic while target sele
 4. Test human and conventional automation alternatives.
 5. Avoid attributing AI use based only on quality, speed, or code comments.
 6. Treat individual Sigma matches as investigative evidence, not final attribution.
+7. Separate authorized evaluation intent from observed external impact.
+8. Treat loss of containment as an incident even when the original activity was authorized testing.
 
 ## Related Resources
 
 - [Covert AI-Enabled Offensive Cyber Operations](../Covert-AI-Enabled-Offensive-Cyber-Operations.md)
+- [Offensive Cyber Agent Detection-in-Depth](../Offensive-Cyber-Agent-Detection-in-Depth.md)
 - [AI-Enabled Detection and Hunting Catalog](../AI-Enabled-Detection-and-Hunting-Catalog.md)
 - [AIDAF Framework](../README.md)
 - [AIDAF Sigma Detection Pack](../sigma/README.md)
+
+## Reference
+
+Bearman, T., Covino, C., Mittelsteadt, M., & O'Brien, J. (2026, July 27). *The OpenAI/Hugging Face incident: Challenges in controlling and containing cyber-capable AI systems*. Institute for AI Policy and Strategy. https://www.iaps.ai/research/the-openaihugging-face-incident-challenges-in-controlling-and-containing-cyber-capable-ai-systems
