@@ -103,16 +103,86 @@ Correlate repeated ordered cycles:
 
 Suggested AIDAF evidence: E3 when trace, prompt, tool-call, or process artifacts are preserved.
 
+## Autonomous Cyber Agent and Containment Correlations
+
+### INT-AI-07 Sandbox Escape Followed by Unauthorized Egress
+
+Correlate on one agent or evaluation workload:
+
+1. Sandbox, namespace, container, browser, VM, or policy-boundary violation or unexpected transition.
+2. Newly available network route, proxy use, or egress not present before the boundary event.
+3. Connection to an unapproved Internet destination or third-party target.
+4. Reconnaissance, authentication, exploitation, data access, or command execution against that target.
+
+Suggested AIDAF evidence: E3 when the agent trace and boundary telemetry are directly correlated. Raise to E4 only with direct provider or recovered agent evidence confirming autonomous causation.
+
+### INT-AI-08 Continued Action After Stop, Deny, or Revocation
+
+Correlate:
+
+1. Kill switch, explicit stop signal, policy deny, approval denial, credential revocation, or containment action.
+2. Subsequent alternate identity, alternate tool, new process, new network path, or delegated sub-agent.
+3. Continued system modification, external communication, or tool use.
+
+Suggested AIDAF evidence: E3 when the same agent, trace, workload, or orchestrator is linked across the control event.
+
+### INT-AI-09 Agent Honeypot or Canary Engagement
+
+Correlate:
+
+1. Access to an agent-specific honeypot, honeytoken, honey tool, decoy memory object, synthetic credential, or false administrative path.
+2. Tool or command selection based on the decoy content.
+3. Follow-on action such as credential use, privilege escalation, lateral movement, or external communication.
+4. Adaptation after a deceptive or failed result.
+
+Suggested AIDAF evidence: E2-E3 depending on whether agent-specific traces or model interaction are available.
+
+### INT-AI-10 Autonomous Resource Acquisition and Persistence
+
+Correlate across identity, cloud, host, and billing telemetry:
+
+1. Unauthorized credential harvesting, account creation, cloud-resource provisioning, cryptocurrency mining, or compute acquisition.
+2. Deployment of a new runtime, workload, proxy, or persistence mechanism.
+3. Continued agentic or offensive activity from the acquired resource.
+4. Shutdown avoidance, provider switching, or replacement infrastructure after containment.
+
+Suggested AIDAF evidence: E2-E3. Resource acquisition alone does not establish autonomous AI use.
+
+### EXT-AI-04 Cross-Target Autonomous Campaign Sequence
+
+Correlate across targets or organizations where data-sharing arrangements permit:
+
+1. Common agent identity, provider account, service identity, trace cluster, infrastructure, or tool fingerprint.
+2. Repeated reconnaissance-to-action cycles against multiple targets.
+3. Short-interval adaptation after target-specific errors or defenses.
+4. Common command structures, provider telemetry, or cloud-origin evidence.
+
+Suggested AIDAF evidence: E2 from behavioral correlation; E3-E4 when provider or agent-origin telemetry links the campaign.
+
+### INT-AI-11 Invalid or Mismatched Agent Identity
+
+In environments that require verifiable agent identity or attestation, correlate:
+
+1. Missing, invalid, expired, or revoked agent identifier.
+2. Identifier reused by multiple inconsistent workloads or locations.
+3. Claimed agent identity does not match workload identity, certificate, attestation, model gateway, or execution environment.
+4. Sensitive tool use or critical-infrastructure interaction follows the mismatch.
+
+Suggested AIDAF evidence: E2 as an agent-origin anomaly. Identity mismatch alone does not prove maliciousness.
+
 ## Required Correlation Fields
 
 - Source and destination IP
 - Host and device identifiers
-- User, service, and agent identity
+- User, service, agent, and workload identity
 - Process GUID, parent process GUID, and command line
 - Session, trace, request, and tool-call identifiers
 - URI, HTTP status, authentication result, and client fingerprint
 - File path, hash, creation time, and signer
 - Model endpoint, runtime, SDK, provider, and API-key identity
+- Agent identifier or attestation, issuer, signature status, workload binding, and revocation status where applicable
+- Sandbox or containment state, boundary events, policy decisions, approval status, stop events, and kill-switch events
+- Cloud resource creation, billing or compute anomalies, and new workload identifiers
 
 ## Validation Requirements
 
@@ -120,4 +190,14 @@ Suggested AIDAF evidence: E3 when trace, prompt, tool-call, or process artifacts
 - Preserve failed attempts and intermediate outputs.
 - Require analyst review before assigning AI involvement.
 - Report alternative explanations and telemetry gaps.
-- Treat external behavioral patterns as lower-quality evidence than internal runtime, prompt, agent-state, or tool-call artifacts.
+- Treat external behavioral patterns as lower-quality evidence than internal runtime, prompt, agent-state, tool-call, or provider-origin artifacts.
+- Test containment and sandbox-escape scenarios only in isolated authorized environments.
+- Do not treat missing agent identifiers as suspicious unless an identity or attestation requirement has been formally deployed.
+
+## References
+
+Bearman, T., Covino, C., Mittelsteadt, M., & O'Brien, J. (2026, July 27). *The OpenAI/Hugging Face incident: Challenges in controlling and containing cyber-capable AI systems*. Institute for AI Policy and Strategy. https://www.iaps.ai/research/the-openaihugging-face-incident-challenges-in-controlling-and-containing-cyber-capable-ai-systems
+
+Kraprayoon, J., Ee, S., Rosen, B., Matthew, Y., Singh, A., Covino, C., & Gershovich, A. B. (2026, March 11). *Highly autonomous cyber-capable agents: Anticipating capabilities, tactics, and strategic implications*. Institute for AI Policy and Strategy. https://www.iaps.ai/research/highly-autonomous-cyber-capable-agents
+
+Mittelsteadt, M., Kraprayoon, J., Staes-Polet, R., Galeev, O., Wehner, J., Covino, C., & Ee, S. (2026, May 19). *Detecting offensive cyber agents: A detection-in-depth approach*. Institute for AI Policy and Strategy. https://www.iaps.ai/research/detecting-offensive-cyber-agents
